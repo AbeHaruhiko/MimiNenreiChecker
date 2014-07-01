@@ -372,13 +372,6 @@ public class MainActivity extends ActionBarActivity
             mAudioTrack.write(mSoundBuffer, 0, mSoundBuffer.length);
         }
 
-        short[] getSound(short[] buff, double wave) {
-            for (int i = 0; i < buff.length; i++) {
-                mSoundBuffer[i] = (short) (Short.MAX_VALUE * wave);
-            }
-            return buff;
-        }
-
         class ForceStopTimer extends TimerTask {
             @Override
             public void run() {
