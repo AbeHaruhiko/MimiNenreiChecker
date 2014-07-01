@@ -21,18 +21,45 @@
             android:visibility="visible">
 
             <view
+                class="jp.caliconography.android.widget.CustomFontTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="&#xf027;"
+                android:id="@+id/icn_info"
+                android:layout_alignParentTop="true"
+                caliconography:customFont="fontawesome-webfont.ttf"
+                android:layout_alignTop="@+id/txt_info"
+                android:layout_below="@+id/txt_info"
+                android:layout_margin="8dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="安全のため再生から約10秒後に自動的に停止します。"
+                android:id="@+id/txt_info"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/icn_info"
+                android:layout_margin="8dp" />
+
+            <view
                 android:id="@+id/btn_lv1"
                 class="jp.caliconography.android.widget.CustomFontButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
+                android:layout_alignParentTop="false"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="8dp"
                 android:background="@drawable/btn_common_back"
                 android:padding="24dp"
                 android:text="Lv.1 40代以上 &#xf04b;"
                 android:textSize="24sp"
-                caliconography:customFont="fontawesome-webfont.ttf" />
+                caliconography:customFont="fontawesome-webfont.ttf"
+                android:layout_below="@+id/txt_info" />
 
             <view
                 android:id="@+id/btn_lv2"

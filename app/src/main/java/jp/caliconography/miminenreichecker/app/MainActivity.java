@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.beardedhen.androidbootstrap.FontAwesome;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
@@ -321,9 +323,9 @@ public class MainActivity extends ActionBarActivity
                     for (Button item : mButtonList) {
                         Log.d(TAG, "6");
                         if (item == clickedButton) {
-                            item.setText(item.getText().toString().replace("", ""));
+                            item.setText(item.getText().toString().replace(FontAwesome.getFaMap().get("fa-play"), FontAwesome.getFaMap().get("fa-pause")));
                         } else {
-                            item.setText(item.getText().toString().replace("", ""));
+                            item.setText(item.getText().toString().replace(FontAwesome.getFaMap().get("fa-pause"), FontAwesome.getFaMap().get("fa-play")));
                         }
                     }
                     Log.d(TAG, "7");
@@ -337,7 +339,7 @@ public class MainActivity extends ActionBarActivity
 
                     for (Button item : mButtonList) {
                         Log.d(TAG, "10");
-                        item.setText(item.getText().toString().replace("", ""));
+                        item.setText(item.getText().toString().replace(FontAwesome.getFaMap().get("fa-pause"), FontAwesome.getFaMap().get("fa-play")));
                     }
                     Log.d(TAG, "11");
 
@@ -430,7 +432,7 @@ public class MainActivity extends ActionBarActivity
                             mAudioTrack.stop();
                         }
                         for (Button item : mButtonList) {
-                            item.setText(item.getText().toString().replace("", ""));
+                            item.setText(item.getText().toString().replace(FontAwesome.getFaMap().get("fa-pause"), FontAwesome.getFaMap().get("fa-play")));
                         }
 
                     }
