@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="&#xf027;"
+                android:text="&#xf05a;"
                 android:id="@+id/icn_info"
                 android:layout_alignParentTop="true"
                 caliconography:customFont="fontawesome-webfont.ttf"

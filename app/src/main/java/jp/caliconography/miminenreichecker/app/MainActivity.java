@@ -150,22 +150,6 @@ public class MainActivity extends ActionBarActivity
         private SinWaveGenerator sinWaveGenerator5;
         private SinWaveGenerator sinWaveGenerator6;
         private HashMap<View, SinWaveGenerator> mBtnGenMap = new HashMap<View, SinWaveGenerator>();
-//        private double mCurrentWave;
-//        private double wave1;
-//        private double wave2;
-//        private double wave3;
-//        private double wave4;
-//        private double wave5;
-//        private double wave6;
-//        private HashMap<View, Double> mBtnGenMap = new HashMap<View, Double>();
-//        private short[] mCurrentWave;
-//        private short[] wave1;
-//        private short[] wave2;
-//        private short[] wave3;
-//        private short[] wave4;
-//        private short[] wave5;
-//        private short[] wave6;
-//        private HashMap<View, short[]> mBtnGenMap = new HashMap<View, short[]>();
 
         private final int mFrequency = 17000;
         private int mSamplerate = 44100;
@@ -186,12 +170,6 @@ public class MainActivity extends ActionBarActivity
         }
 
         public PlaceholderFragment() {
-//            backgroundThread = new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    mAudioTrack.write(mCurrentWaveGenerator, 0, mCurrentWaveGenerator.length);
-//                }
-//            });
         }
 
         @Override
@@ -241,12 +219,6 @@ public class MainActivity extends ActionBarActivity
             sinWaveGenerator4 = new SinWaveGenerator(18000, 1);
             sinWaveGenerator5 = new SinWaveGenerator(20000, 1);
             sinWaveGenerator6 = new SinWaveGenerator(21000, 1);
-//            wave1 = new SinWaveGenerator(440, 1).generateSinWave();
-//            wave2 = new SinWaveGenerator(15000, 1).generateSinWave();
-//            wave3 = new SinWaveGenerator(16000, 1).generateSinWave();
-//            wave4 = new SinWaveGenerator(18000, 1).generateSinWave();
-//            wave5 = new SinWaveGenerator(20000, 1).generateSinWave();
-//            wave6 = new SinWaveGenerator(21000, 1).generateSinWave();
 
 
             mBtnLv1 = (Button) rootView.findViewById(R.id.btn_lv1);
@@ -267,12 +239,6 @@ public class MainActivity extends ActionBarActivity
             mBtnGenMap.put(mBtnLv4, sinWaveGenerator4);
             mBtnGenMap.put(mBtnLv5, sinWaveGenerator5);
             mBtnGenMap.put(mBtnLv6, sinWaveGenerator6);
-//            mBtnGenMap.put(mBtnLv1, wave1);
-//            mBtnGenMap.put(mBtnLv2, wave2);
-//            mBtnGenMap.put(mBtnLv3, wave3);
-//            mBtnGenMap.put(mBtnLv4, wave5);
-//            mBtnGenMap.put(mBtnLv5, wave5);
-//            mBtnGenMap.put(mBtnLv6, wave6);
 
             View.OnClickListener onClickListener = new View.OnClickListener() {
 
@@ -397,21 +363,13 @@ public class MainActivity extends ActionBarActivity
                 phase = (phase > 1) ? 0 : phase;
                 return Math.sin(2 * Math.PI * phase) * amp;
             }
-//            public short[] generateSinWave() {
-//                phase += freq / mSamplerate;
-//                phase = (phase > 1) ? 0 : phase;
-//                short[] buff = new short[mSoundBufferSize];
-//                return getSound(buff, Math.sin(2 * Math.PI * phase) * amp);
-//            }
         }
 
         void writeSound() {
-//            backgroundThread.run();
             for (int i = 0; i < mSoundBuffer.length; i++) {
                 mSoundBuffer[i] = (short) (Short.MAX_VALUE * mCurrentWaveGenerator.generateSinWave());
             }
             mAudioTrack.write(mSoundBuffer, 0, mSoundBuffer.length);
-//            mAudioTrack.write(mCurrentWave, 0, mCurrentWave.length);
         }
 
         short[] getSound(short[] buff, double wave) {
