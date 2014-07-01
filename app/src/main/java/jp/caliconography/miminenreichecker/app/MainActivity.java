@@ -24,6 +24,7 @@ import com.beardedhen.androidbootstrap.FontAwesome;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -126,11 +127,9 @@ public class MainActivity extends ActionBarActivity
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
-
+        private final int mFrequency = 17000;
         private Thread backgroundThread;
-
         private AudioTrack mAudioTrack;
-
         private Button mBtnLv1;
         private Button mBtnLv2;
         private Button mBtnLv3;
@@ -138,10 +137,8 @@ public class MainActivity extends ActionBarActivity
         private Button mBtnLv5;
         private Button mBtnLv6;
         private ArrayList<Button> mButtonList = new ArrayList<Button>();
-
         private Timer timer = new Timer();
-        private Handler handle = new Handler();
-
+        private Handler handler = new Handler();
         private SinWaveGenerator mCurrentWaveGenerator;
         private SinWaveGenerator sinWaveGenerator1;
         private SinWaveGenerator sinWaveGenerator2;
@@ -150,12 +147,14 @@ public class MainActivity extends ActionBarActivity
         private SinWaveGenerator sinWaveGenerator5;
         private SinWaveGenerator sinWaveGenerator6;
         private HashMap<View, SinWaveGenerator> mBtnGenMap = new HashMap<View, SinWaveGenerator>();
-
-        private final int mFrequency = 17000;
         private int mSamplerate = 44100;
         private short[] mSoundBuffer;
         private int mSoundBufferSize;
         private ForceStopTimer mForceStopTimer;
+        private Map<String, String> mFaMap = FontAwesome.getFaMap();
+
+        public PlaceholderFragment() {
+        }
 
         /**
          * Returns a new instance of this fragment for the given section
@@ -167,9 +166,6 @@ public class MainActivity extends ActionBarActivity
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
             return fragment;
-        }
-
-        public PlaceholderFragment() {
         }
 
         @Override
@@ -260,7 +256,7 @@ public class MainActivity extends ActionBarActivity
         private void doOnClick(final View view) {
             Log.d(TAG, "1");
             if (mAudioTrack != null) {
-                Button clickedButton = ((Button) view);
+                final Button clickedButton = ((Button) view);
                 if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_STOPPED) {
                     Log.d(TAG, "2");
 
@@ -280,6 +276,37 @@ public class MainActivity extends ActionBarActivity
                     if (mForceStopTimer != null) mForceStopTimer.cancel();
                     mForceStopTimer = new ForceStopTimer();
                     timer.schedule(mForceStopTimer, 10000);
+
+                    new Thread(new Runnable() {
+                        public void run() {
+                            while (true) {
+                                // スリープ処理をmHandler.postの外でやってみる
+                                try {
+                                    Thread.sleep(200);
+                                } catch (InterruptedException e) {
+                                }
+                                handler.post(new Runnable() {
+                                    public void run() {
+//                                        tv.setText("nyoro");
+                                        String nowLabel = clickedButton.getText().toString();
+                                        String now = clickedButton.getText().toString().substring(nowLabel.length() - 1, nowLabel.length());
+                                        String next = mFaMap.get("fa-volume-up");
+                                        if (nowLabel.contains(mFaMap.get("fa-volume-off"))) {
+                                            next = mFaMap.get("fa-volume-down");
+                                        } else if (nowLabel.contains(mFaMap.get("fa-volume-down"))) {
+                                            next = mFaMap.get("fa-volume-up");
+                                        } else if (nowLabel.contains(mFaMap.get("fa-volume-up"))) {
+                                            next = mFaMap.get("fa-volume-off");
+                                        } else {
+                                            next = mFaMap.get("fa-volume-off");
+                                        }
+                                        clickedButton.setText(clickedButton.getText().toString().replace(now, next));
+                                    }
+                                });
+                                /* ここら辺にループ抜ける処理とか */
+                            }
+                        }
+                    }).start();
                     Log.d(TAG, "4");
 
                     writeSound();
@@ -289,7 +316,7 @@ public class MainActivity extends ActionBarActivity
                     for (Button item : mButtonList) {
                         Log.d(TAG, "6");
                         if (item == clickedButton) {
-                            item.setText(item.getText().toString().replace(FontAwesome.getFaMap().get("fa-play"), FontAwesome.getFaMap().get("fa-pause")));
+//                            item.setText(item.getText().toString().replace(FontAwesome.getFaMap().get("fa-play"), FontAwesome.getFaMap().get("fa-pause")));
                         } else {
                             item.setText(item.getText().toString().replace(FontAwesome.getFaMap().get("fa-pause"), FontAwesome.getFaMap().get("fa-play")));
                         }
@@ -347,6 +374,13 @@ public class MainActivity extends ActionBarActivity
             Debug.stopMethodTracing();
         }
 
+        void writeSound() {
+            for (int i = 0; i < mSoundBuffer.length; i++) {
+                mSoundBuffer[i] = (short) (Short.MAX_VALUE * mCurrentWaveGenerator.generateSinWave());
+            }
+            mAudioTrack.write(mSoundBuffer, 0, mSoundBuffer.length);
+        }
+
         //後々モジュレーション方式に移行するためスタイル
         class SinWaveGenerator {
             public double freq = 0;
@@ -365,17 +399,10 @@ public class MainActivity extends ActionBarActivity
             }
         }
 
-        void writeSound() {
-            for (int i = 0; i < mSoundBuffer.length; i++) {
-                mSoundBuffer[i] = (short) (Short.MAX_VALUE * mCurrentWaveGenerator.generateSinWave());
-            }
-            mAudioTrack.write(mSoundBuffer, 0, mSoundBuffer.length);
-        }
-
         class ForceStopTimer extends TimerTask {
             @Override
             public void run() {
-                handle.post(new Runnable() {
+                handler.post(new Runnable() {
                     @Override
                     public void run() {
                         if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
@@ -383,7 +410,7 @@ public class MainActivity extends ActionBarActivity
                             mAudioTrack.stop();
                         }
                         for (Button item : mButtonList) {
-                            item.setText(item.getText().toString().replace(FontAwesome.getFaMap().get("fa-pause"), FontAwesome.getFaMap().get("fa-play")));
+                            item.setText(item.getText().toString().replace(mFaMap.get("fa-pause"), mFaMap.get("fa-play")));
                         }
 
                     }
