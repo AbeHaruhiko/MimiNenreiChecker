@@ -32,7 +32,8 @@ import jp.caliconography.android.widget.CustomFontButtonWithRightIcon;
 
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,
+        DiagnosisFragment.OnFragmentInteractionListener {
 
     final static String TAG = MainActivity.class.getSimpleName();
 
@@ -65,9 +66,22 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        fragmentManager.beginTransaction()
+//                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+//                .commit();
+        Fragment fragment = PlaceholderFragment.newInstance(position + 1);
         FragmentManager fragmentManager = getSupportFragmentManager();
+        switch (position) {
+            case 0:
+                fragment = PlaceholderFragment.newInstance(position + 1);
+                break;
+            case 1:
+                fragment = DiagnosisFragment.newInstance(position + 1);
+                break;
+        }
         fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                .replace(R.id.container, fragment)
                 .commit();
     }
 
@@ -118,6 +132,11 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onFragmentInteraction() {
+
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -126,7 +145,7 @@ public class MainActivity extends ActionBarActivity
          * The fragment argument representing the section number for this
          * fragment.
          */
-        private static final String ARG_SECTION_NUMBER = "section_number";
+        private static final String ARG_SECTION_NUMBER = "1";
         private final int mFrequency = 17000;
         //        private Thread backgroundThread;
         private AudioTrack mAudioTrack;
@@ -366,8 +385,7 @@ public class MainActivity extends ActionBarActivity
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
+            ((MainActivity) activity).onSectionAttached(getArguments().getInt(ARG_SECTION_NUMBER));
         }
 
         @Override
@@ -437,6 +455,7 @@ public class MainActivity extends ActionBarActivity
                 });
             }
         }
+
         //後々モジュレーション方式に移行するためスタイル
         class SinWaveGenerator {
             public double freq = 0;
