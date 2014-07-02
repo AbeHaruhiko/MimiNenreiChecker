@@ -1,13 +1,34 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:caliconography="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context="jp.caliconography.miminenreichecker.app.DiagnosisFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_marginLeft="48dp"
+        android:layout_marginRight="48dp"
+        android:layout_marginTop="48dp"
+        android:text="@string/diag_description"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-</FrameLayout>
+    <view
+        android:id="@+id/btn_start_diag"
+        class="jp.caliconography.android.widget.CustomFontButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="false"
+        android:layout_below="@+id/textView"
+        android:layout_margin="48dp"
+        android:background="@drawable/btn_common_back"
+        android:padding="@dimen/padding_level_button"
+        android:text="&#xf04b; START!"
+        android:textSize="24sp"
+        caliconography:customFont="fontawesome-webfont.ttf" />
+
+</RelativeLayout>
