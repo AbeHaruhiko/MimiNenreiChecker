@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:caliconography="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:duplicateParentState="true"
+    android:orientation="horizontal" >
+
+    <view
+        android:id="@+id/lblMiddle"
+        class="jp.caliconography.android.widget.CustomFontTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:paddingRight="16dp"
+        android:layout_weight="1"
+        caliconography:customFont="fontawesome-webfont.ttf" />
+
+    <view
+        android:id="@+id/lblRight"
+        class="jp.caliconography.android.widget.CustomFontTextView"
+        android:layout_width="24dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="8dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:paddingBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="8dp"
+        android:gravity="left"
+        caliconography:customFont="fontawesome-webfont.ttf" />
+
+</LinearLayout>
