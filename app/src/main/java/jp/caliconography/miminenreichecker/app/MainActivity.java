@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.beardedhen.androidbootstrap.FontAwesome;
 
@@ -29,6 +28,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import jp.caliconography.android.miminenreichecker.app.R;
+import jp.caliconography.android.widget.CustomFontButtonWithRightIcon;
 
 
 public class MainActivity extends ActionBarActivity
@@ -128,15 +128,15 @@ public class MainActivity extends ActionBarActivity
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
         private final int mFrequency = 17000;
-        private Thread backgroundThread;
+        //        private Thread backgroundThread;
         private AudioTrack mAudioTrack;
-        private Button mBtnLv1;
-        private Button mBtnLv2;
-        private Button mBtnLv3;
-        private Button mBtnLv4;
-        private Button mBtnLv5;
-        private Button mBtnLv6;
-        private ArrayList<Button> mButtonList = new ArrayList<Button>();
+        private CustomFontButtonWithRightIcon mBtnLv1;
+        private CustomFontButtonWithRightIcon mBtnLv2;
+        private CustomFontButtonWithRightIcon mBtnLv3;
+        private CustomFontButtonWithRightIcon mBtnLv4;
+        private CustomFontButtonWithRightIcon mBtnLv5;
+        private CustomFontButtonWithRightIcon mBtnLv6;
+        private ArrayList<CustomFontButtonWithRightIcon> mButtonList = new ArrayList<CustomFontButtonWithRightIcon>();
         private Timer timer = new Timer();
         private Handler handler = new Handler();
         private SinWaveGenerator mCurrentWaveGenerator;
@@ -152,6 +152,7 @@ public class MainActivity extends ActionBarActivity
         private int mSoundBufferSize;
         private ForceStopTimer mForceStopTimer;
         private Map<String, String> mFaMap = FontAwesome.getFaMap();
+        private BackgroundThread mBackgroundRunnable;
 
         public PlaceholderFragment() {
         }
@@ -217,12 +218,12 @@ public class MainActivity extends ActionBarActivity
             sinWaveGenerator6 = new SinWaveGenerator(21000, 1);
 
 
-            mBtnLv1 = (Button) rootView.findViewById(R.id.btn_lv1);
-            mBtnLv2 = (Button) rootView.findViewById(R.id.btn_lv2);
-            mBtnLv3 = (Button) rootView.findViewById(R.id.btn_lv3);
-            mBtnLv4 = (Button) rootView.findViewById(R.id.btn_lv4);
-            mBtnLv5 = (Button) rootView.findViewById(R.id.btn_lv5);
-            mBtnLv6 = (Button) rootView.findViewById(R.id.btn_lv6);
+            mBtnLv1 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv1);
+            mBtnLv2 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv2);
+            mBtnLv3 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv3);
+            mBtnLv4 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv4);
+            mBtnLv5 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv5);
+            mBtnLv6 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv6);
             mButtonList.add(mBtnLv1);
             mButtonList.add(mBtnLv2);
             mButtonList.add(mBtnLv3);
@@ -256,7 +257,7 @@ public class MainActivity extends ActionBarActivity
         private void doOnClick(final View view) {
             Log.d(TAG, "1");
             if (mAudioTrack != null) {
-                final Button clickedButton = ((Button) view);
+                final CustomFontButtonWithRightIcon clickedButton = ((CustomFontButtonWithRightIcon) view);
                 if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_STOPPED) {
                     Log.d(TAG, "2");
 
@@ -277,48 +278,59 @@ public class MainActivity extends ActionBarActivity
                     mForceStopTimer = new ForceStopTimer();
                     timer.schedule(mForceStopTimer, 10000);
 
-                    new Thread(new Runnable() {
-                        public void run() {
-                            while (true) {
-                                // スリープ処理をmHandler.postの外でやってみる
-                                try {
-                                    Thread.sleep(200);
-                                } catch (InterruptedException e) {
-                                }
-                                handler.post(new Runnable() {
-                                    public void run() {
-//                                        tv.setText("nyoro");
-                                        String nowLabel = clickedButton.getText().toString();
-                                        String now = clickedButton.getText().toString().substring(nowLabel.length() - 1, nowLabel.length());
-                                        String next = mFaMap.get("fa-volume-up");
-                                        if (nowLabel.contains(mFaMap.get("fa-volume-off"))) {
-                                            next = mFaMap.get("fa-volume-down");
-                                        } else if (nowLabel.contains(mFaMap.get("fa-volume-down"))) {
-                                            next = mFaMap.get("fa-volume-up");
-                                        } else if (nowLabel.contains(mFaMap.get("fa-volume-up"))) {
-                                            next = mFaMap.get("fa-volume-off");
-                                        } else {
-                                            next = mFaMap.get("fa-volume-off");
-                                        }
-                                        clickedButton.setText(clickedButton.getText().toString().replace(now, next));
-                                    }
-                                });
-                                /* ここら辺にループ抜ける処理とか */
-                            }
-                        }
-                    }).start();
+//                    backgroundThread = new Thread(new Runnable() {
+//                        public boolean running = true;
+//                        public void run() {
+//                            while (running) {
+//                                if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+//                                    // スリープ処理をmHandler.postの外でやってみる
+//                                    try {
+//                                        Thread.sleep(200);
+//                                    } catch (InterruptedException e) {
+//                                    }
+//                                    handler.post(new Runnable() {
+//                                        public void run() {
+//                                            String now = clickedButton.getRightIcon();
+//                                            String next = mFaMap.get("fa-volume-up");
+//                                            if (now.equals(mFaMap.get("fa-volume-off"))) {
+//                                                next = mFaMap.get("fa-volume-down");
+//                                            } else if (now.contains(mFaMap.get("fa-volume-down"))) {
+//                                                next = mFaMap.get("fa-volume-up");
+//                                            } else if (now.contains(mFaMap.get("fa-volume-up"))) {
+//                                                next = mFaMap.get("fa-volume-off");
+//                                            } else {
+//                                                next = mFaMap.get("fa-volume-off");
+//                                            }
+//                                            clickedButton.setRightIcon(next);
+//                                        }
+//                                    });
+//                                /* ここら辺にループ抜ける処理とか */
+//                                } else {
+//                                    handler.post(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            clickedButton.setRightIcon(mFaMap.get("fa-play"));
+//                                        }
+//                                    });
+//                                    break;
+//                                }
+//                            }
+//                        }
+//                    });
+                    mBackgroundRunnable = new BackgroundThread(clickedButton);
+                    new Thread(mBackgroundRunnable).start();
                     Log.d(TAG, "4");
 
                     writeSound();
                     mAudioTrack.setStereoVolume(1, 1);
                     Log.d(TAG, "5");
 
-                    for (Button item : mButtonList) {
+                    for (CustomFontButtonWithRightIcon item : mButtonList) {
                         Log.d(TAG, "6");
                         if (item == clickedButton) {
 //                            item.setText(item.getText().toString().replace(FontAwesome.getFaMap().get("fa-play"), FontAwesome.getFaMap().get("fa-pause")));
                         } else {
-                            item.setText(item.getText().toString().replace(FontAwesome.getFaMap().get("fa-pause"), FontAwesome.getFaMap().get("fa-play")));
+                            item.setRightIcon(FontAwesome.getFaMap().get("fa-play"));
                         }
                     }
                     Log.d(TAG, "7");
@@ -326,13 +338,14 @@ public class MainActivity extends ActionBarActivity
                     Log.d(TAG, "8");
 
                     //ボタンが押されたら停止
+                    mBackgroundRunnable.running = false;
                     mAudioTrack.setStereoVolume(0, 0);
                     mAudioTrack.stop();
                     Log.d(TAG, "9");
 
-                    for (Button item : mButtonList) {
+                    for (CustomFontButtonWithRightIcon item : mButtonList) {
                         Log.d(TAG, "10");
-                        item.setText(item.getText().toString().replace(FontAwesome.getFaMap().get("fa-pause"), FontAwesome.getFaMap().get("fa-play")));
+                        item.setRightIcon(FontAwesome.getFaMap().get("fa-play"));
                     }
                     Log.d(TAG, "11");
 
@@ -381,6 +394,49 @@ public class MainActivity extends ActionBarActivity
             mAudioTrack.write(mSoundBuffer, 0, mSoundBuffer.length);
         }
 
+        class BackgroundThread implements Runnable {
+
+            protected boolean running = true;
+            private CustomFontButtonWithRightIcon mClickedButton;
+
+            public BackgroundThread(CustomFontButtonWithRightIcon button) {
+                this.mClickedButton = button;
+            }
+
+            @Override
+            public void run() {
+                while (running) {
+                    // スリープ処理をmHandler.postの外でやってみる
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                    }
+                    handler.post(new Runnable() {
+                        public void run() {
+                            String now = mClickedButton.getRightIcon();
+                            String next = mFaMap.get("fa-volume-up");
+                            if (now.equals(mFaMap.get("fa-volume-off"))) {
+                                next = mFaMap.get("fa-volume-down");
+                            } else if (now.contains(mFaMap.get("fa-volume-down"))) {
+                                next = mFaMap.get("fa-volume-up");
+                            } else if (now.contains(mFaMap.get("fa-volume-up"))) {
+                                next = mFaMap.get("fa-volume-off");
+                            } else {
+                                next = mFaMap.get("fa-volume-off");
+                            }
+                            mClickedButton.setRightIcon(next);
+                        }
+                    });
+                }
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mClickedButton.setRightIcon(mFaMap.get("fa-play"));
+                    }
+                });
+            }
+        }
         //後々モジュレーション方式に移行するためスタイル
         class SinWaveGenerator {
             public double freq = 0;
@@ -409,8 +465,9 @@ public class MainActivity extends ActionBarActivity
                             mAudioTrack.setStereoVolume(0, 0);
                             mAudioTrack.stop();
                         }
-                        for (Button item : mButtonList) {
-                            item.setText(item.getText().toString().replace(mFaMap.get("fa-pause"), mFaMap.get("fa-play")));
+                        mBackgroundRunnable.running = false;
+                        for (CustomFontButtonWithRightIcon item : mButtonList) {
+                            item.setRightIcon(mFaMap.get("fa-play"));
                         }
 
                     }

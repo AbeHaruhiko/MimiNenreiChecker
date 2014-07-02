@@ -21,15 +21,6 @@
             android:visibility="visible">
 
             <view
-                android:id="@+id/view"
-                class="jp.caliconography.android.widget.CustomFontButtonWithRightIcon"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="カスタムボタン"
-                caliconography:customFont="fontawesome-webfont.ttf"
-                caliconography:icon_right="&#xf05a;" />
-
-            <view
                 android:id="@+id/icn_info"
                 class="jp.caliconography.android.widget.CustomFontTextView"
                 android:layout_width="wrap_content"
@@ -52,12 +43,12 @@
                 android:layout_alignParentTop="true"
                 android:layout_margin="8dp"
                 android:layout_toRightOf="@+id/icn_info"
-                android:text="安全のため再生から約10秒後に自動的に停止します。"
+                android:text="安全のため再生開始から約10秒後に自動的に停止します。"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <view
                 android:id="@+id/btn_lv1"
-                class="jp.caliconography.android.widget.CustomFontButton"
+                class="jp.caliconography.android.widget.CustomFontButtonWithRightIcon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="false"
@@ -66,13 +57,13 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/btn_common_back"
                 android:padding="24dp"
-                android:text="Lv.1 40代以上 &#xf04b;"
+                android:text="Lv.1 40代以上"
                 android:textSize="24sp"
-                caliconography:customFont="fontawesome-webfont.ttf" />
+                caliconography:icon_right="&#xf04b;" />
 
             <view
                 android:id="@+id/btn_lv2"
-                class="jp.caliconography.android.widget.CustomFontButton"
+                class="jp.caliconography.android.widget.CustomFontButtonWithRightIcon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/btn_lv1"
@@ -86,7 +77,7 @@
 
             <view
                 android:id="@+id/btn_lv3"
-                class="jp.caliconography.android.widget.CustomFontButton"
+                class="jp.caliconography.android.widget.CustomFontButtonWithRightIcon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/btn_lv2"
@@ -100,7 +91,7 @@
 
             <view
                 android:id="@+id/btn_lv4"
-                class="jp.caliconography.android.widget.CustomFontButton"
+                class="jp.caliconography.android.widget.CustomFontButtonWithRightIcon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/btn_lv3"
@@ -114,7 +105,7 @@
 
             <view
                 android:id="@+id/btn_lv5"
-                class="jp.caliconography.android.widget.CustomFontButton"
+                class="jp.caliconography.android.widget.CustomFontButtonWithRightIcon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/btn_lv4"
@@ -124,11 +115,12 @@
                 android:padding="24dp"
                 android:text="Lv.5 13歳〜17歳 &#xf04b;"
                 android:textSize="24sp"
+                android:visibility="gone"
                 caliconography:customFont="fontawesome-webfont.ttf" />
 
             <view
                 android:id="@+id/btn_lv6"
-                class="jp.caliconography.android.widget.CustomFontButton"
+                class="jp.caliconography.android.widget.CustomFontButtonWithRightIcon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -139,7 +131,19 @@
                 android:padding="24dp"
                 android:text="Lv.6 犬並み &#xf04b;"
                 android:textSize="24sp"
+                android:visibility="gone"
                 caliconography:customFont="fontawesome-webfont.ttf" />
+
+            <view
+                android:id="@+id/view"
+                class="jp.caliconography.android.widget.CustomFontButtonWithRightIcon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btn_lv6"
+                android:layout_margin="8dp"
+                android:background="@drawable/btn_common_back"
+                android:text="カ"
+                caliconography:icon_right="&#xf05a;" />
 
 
         </RelativeLayout>
