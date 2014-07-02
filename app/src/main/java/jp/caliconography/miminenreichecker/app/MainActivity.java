@@ -330,7 +330,7 @@ public class MainActivity extends ActionBarActivity
                         if (item == clickedButton) {
 //                            item.setText(item.getText().toString().replace(FontAwesome.getFaMap().get("fa-play"), FontAwesome.getFaMap().get("fa-pause")));
                         } else {
-                            item.setRightIcon(FontAwesome.getFaMap().get("fa-play"));
+                            item.setRightIcon(mFaMap.get("fa-play"));
                         }
                     }
                     Log.d(TAG, "7");
@@ -345,7 +345,7 @@ public class MainActivity extends ActionBarActivity
 
                     for (CustomFontButtonWithRightIcon item : mButtonList) {
                         Log.d(TAG, "10");
-                        item.setRightIcon(FontAwesome.getFaMap().get("fa-play"));
+                        item.setRightIcon(mFaMap.get("fa-play"));
                     }
                     Log.d(TAG, "11");
 

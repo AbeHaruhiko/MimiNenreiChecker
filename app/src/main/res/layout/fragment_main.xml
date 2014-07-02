@@ -54,9 +54,9 @@
                 android:layout_alignParentTop="false"
                 android:layout_below="@+id/txt_info"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="8dp"
+                android:layout_margin="@dimen/margin_level_button"
                 android:background="@drawable/btn_common_back"
-                android:padding="24dp"
+                android:padding="@dimen/padding_level_button"
                 android:text="Lv.1 40代以上"
                 android:textSize="24sp"
                 caliconography:icon_right="&#xf04b;" />
@@ -68,12 +68,12 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/btn_lv1"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="8dp"
+                android:layout_margin="@dimen/margin_level_button"
                 android:background="@drawable/btn_common_back"
-                android:padding="24dp"
-                android:text="Lv.2 30代 &#xf04b;"
+                android:padding="@dimen/padding_level_button"
+                android:text="Lv.2 30代"
                 android:textSize="24sp"
-                caliconography:customFont="fontawesome-webfont.ttf" />
+                caliconography:icon_right="&#xf04b;" />
 
             <view
                 android:id="@+id/btn_lv3"
@@ -82,12 +82,12 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/btn_lv2"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="8dp"
+                android:layout_margin="@dimen/margin_level_button"
                 android:background="@drawable/btn_common_back"
-                android:padding="24dp"
-                android:text="Lv.3 20代後半 &#xf04b;"
+                android:padding="@dimen/padding_level_button"
+                android:text="Lv.3 20代後半"
                 android:textSize="24sp"
-                caliconography:customFont="fontawesome-webfont.ttf" />
+                caliconography:icon_right="&#xf04b;" />
 
             <view
                 android:id="@+id/btn_lv4"
@@ -96,12 +96,12 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/btn_lv3"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="8dp"
+                android:layout_margin="@dimen/margin_level_button"
                 android:background="@drawable/btn_common_back"
-                android:padding="24dp"
-                android:text="Lv.4 18歳〜20代前半 &#xf04b;"
+                android:padding="@dimen/padding_level_button"
+                android:text="Lv.4 18歳〜20代前半"
                 android:textSize="24sp"
-                caliconography:customFont="fontawesome-webfont.ttf" />
+                caliconography:icon_right="&#xf04b;" />
 
             <view
                 android:id="@+id/btn_lv5"
@@ -110,13 +110,12 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/btn_lv4"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="8dp"
+                android:layout_margin="@dimen/margin_level_button"
                 android:background="@drawable/btn_common_back"
-                android:padding="24dp"
-                android:text="Lv.5 13歳〜17歳 &#xf04b;"
+                android:padding="@dimen/padding_level_button"
+                android:text="Lv.5 13歳〜17歳"
                 android:textSize="24sp"
-                android:visibility="gone"
-                caliconography:customFont="fontawesome-webfont.ttf" />
+                caliconography:icon_right="&#xf04b;" />
 
             <view
                 android:id="@+id/btn_lv6"
@@ -126,25 +125,12 @@
                 android:layout_alignParentBottom="true"
                 android:layout_below="@+id/btn_lv5"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="8dp"
+                android:layout_margin="@dimen/margin_level_button"
                 android:background="@drawable/btn_common_back"
-                android:padding="24dp"
-                android:text="Lv.6 犬並み &#xf04b;"
+                android:padding="@dimen/padding_level_button"
+                android:text="Lv.6 犬並"
                 android:textSize="24sp"
-                android:visibility="gone"
-                caliconography:customFont="fontawesome-webfont.ttf" />
-
-            <view
-                android:id="@+id/view"
-                class="jp.caliconography.android.widget.CustomFontButtonWithRightIcon"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/btn_lv6"
-                android:layout_margin="8dp"
-                android:background="@drawable/btn_common_back"
-                android:text="カ"
-                caliconography:icon_right="&#xf05a;" />
-
+                caliconography:icon_right="&#xf04b;" />
 
         </RelativeLayout>
     </ScrollView>

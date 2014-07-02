@@ -13,24 +13,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:paddingRight="16dp"
         android:layout_weight="1"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         caliconography:customFont="fontawesome-webfont.ttf" />
 
     <view
         android:id="@+id/lblRight"
         class="jp.caliconography.android.widget.CustomFontTextView"
-        android:layout_width="24dp"
+        android:layout_width="28dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_margin="8dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:gravity="left"
         android:paddingBottom="8dp"
         android:paddingLeft="8dp"
         android:paddingTop="8dp"
-        android:gravity="left"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         caliconography:customFont="fontawesome-webfont.ttf" />
 
 </LinearLayout>
