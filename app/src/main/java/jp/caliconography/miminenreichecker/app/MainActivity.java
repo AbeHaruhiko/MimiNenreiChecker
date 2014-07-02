@@ -5,7 +5,6 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -192,8 +191,6 @@ public class MainActivity extends ActionBarActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-            Debug.startMethodTracing("tao");
 
             //バッファーサイズの取得
             mSoundBufferSize = AudioTrack.getMinBufferSize(
@@ -402,7 +399,6 @@ public class MainActivity extends ActionBarActivity
         @Override
         public void onPause() {
             super.onPause();
-            Debug.stopMethodTracing();
         }
 
         void writeSound() {
@@ -456,7 +452,6 @@ public class MainActivity extends ActionBarActivity
             }
         }
 
-        //後々モジュレーション方式に移行するためスタイル
         class SinWaveGenerator {
             public double freq = 0;
             public double amp = 0;
