@@ -43,22 +43,25 @@ public class PlaceholderFragment extends Fragment {
     private CustomFontButtonWithRightIcon mBtnLv5;
     private CustomFontButtonWithRightIcon mBtnLv6;
     private ArrayList<CustomFontButtonWithRightIcon> mButtonList = new ArrayList<CustomFontButtonWithRightIcon>();
-    private Timer timer = new Timer();
-    private Handler handler = new Handler();
+    private Timer mForceStopTimer = new Timer();
+    private ForceStopTimer mForceStopTimerTask;
+    private Handler mHandler = new Handler();
     private SinWaveGenerator mCurrentWaveGenerator;
-    private SinWaveGenerator sinWaveGenerator1;
-    private SinWaveGenerator sinWaveGenerator2;
-    private SinWaveGenerator sinWaveGenerator3;
-    private SinWaveGenerator sinWaveGenerator4;
-    private SinWaveGenerator sinWaveGenerator5;
-    private SinWaveGenerator sinWaveGenerator6;
+    private SinWaveGenerator mSinWaveGenerator1;
+    private SinWaveGenerator mSinWaveGenerator2;
+    private SinWaveGenerator mSinWaveGenerator3;
+    private SinWaveGenerator mSinWaveGenerator4;
+    private SinWaveGenerator mSinWaveGenerator5;
+    private SinWaveGenerator mSinWaveGenerator6;
     private HashMap<View, SinWaveGenerator> mBtnGenMap = new HashMap<View, SinWaveGenerator>();
     private short[] mSoundBuffer;
-    private ForceStopTimer mForceStopTimer;
     private Map<String, String> mFaMap = FontAwesome.getFaMap();
     private BackgroundThread mBackgroundRunnable;
 
     public PlaceholderFragment() {
+        /**
+         * ここには何も書かない（書いてはいけない）
+         */
     }
 
     /**
@@ -113,12 +116,12 @@ public class PlaceholderFragment extends Fragment {
                     }
                 }
         );
-        sinWaveGenerator1 = new SinWaveGenerator(440, 1, sampleRate);
-        sinWaveGenerator2 = new SinWaveGenerator(880, 1, sampleRate);
-        sinWaveGenerator3 = new SinWaveGenerator(16000, 1, sampleRate);
-        sinWaveGenerator4 = new SinWaveGenerator(18000, 1, sampleRate);
-        sinWaveGenerator5 = new SinWaveGenerator(20000, 1, sampleRate);
-        sinWaveGenerator6 = new SinWaveGenerator(21000, 1, sampleRate);
+        mSinWaveGenerator1 = new SinWaveGenerator(440, 1, sampleRate);
+        mSinWaveGenerator2 = new SinWaveGenerator(880, 1, sampleRate);
+        mSinWaveGenerator3 = new SinWaveGenerator(16000, 1, sampleRate);
+        mSinWaveGenerator4 = new SinWaveGenerator(18000, 1, sampleRate);
+        mSinWaveGenerator5 = new SinWaveGenerator(20000, 1, sampleRate);
+        mSinWaveGenerator6 = new SinWaveGenerator(21000, 1, sampleRate);
 
 
         mBtnLv1 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv1);
@@ -133,12 +136,12 @@ public class PlaceholderFragment extends Fragment {
         mButtonList.add(mBtnLv4);
         mButtonList.add(mBtnLv5);
         mButtonList.add(mBtnLv6);
-        mBtnGenMap.put(mBtnLv1, sinWaveGenerator1);
-        mBtnGenMap.put(mBtnLv2, sinWaveGenerator2);
-        mBtnGenMap.put(mBtnLv3, sinWaveGenerator3);
-        mBtnGenMap.put(mBtnLv4, sinWaveGenerator4);
-        mBtnGenMap.put(mBtnLv5, sinWaveGenerator5);
-        mBtnGenMap.put(mBtnLv6, sinWaveGenerator6);
+        mBtnGenMap.put(mBtnLv1, mSinWaveGenerator1);
+        mBtnGenMap.put(mBtnLv2, mSinWaveGenerator2);
+        mBtnGenMap.put(mBtnLv3, mSinWaveGenerator3);
+        mBtnGenMap.put(mBtnLv4, mSinWaveGenerator4);
+        mBtnGenMap.put(mBtnLv5, mSinWaveGenerator5);
+        mBtnGenMap.put(mBtnLv6, mSinWaveGenerator6);
 
         View.OnClickListener onLvBtnClickListener = new View.OnClickListener() {
 
@@ -164,12 +167,12 @@ public class PlaceholderFragment extends Fragment {
             if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_STOPPED) {
                 Log.d(TAG, "2");
 
-                mCurrentWaveGenerator = view == mBtnLv1 ? sinWaveGenerator1
-                        : view == mBtnLv2 ? sinWaveGenerator2
-                        : view == mBtnLv3 ? sinWaveGenerator3
-                        : view == mBtnLv4 ? sinWaveGenerator4
-                        : view == mBtnLv5 ? sinWaveGenerator5
-                        : sinWaveGenerator6;
+                mCurrentWaveGenerator = view == mBtnLv1 ? mSinWaveGenerator1
+                        : view == mBtnLv2 ? mSinWaveGenerator2
+                        : view == mBtnLv3 ? mSinWaveGenerator3
+                        : view == mBtnLv4 ? mSinWaveGenerator4
+                        : view == mBtnLv5 ? mSinWaveGenerator5
+                        : mSinWaveGenerator6;
                 Log.d(TAG, "3");
 
                 //ボタンが押されたら再生する。
@@ -177,9 +180,9 @@ public class PlaceholderFragment extends Fragment {
                 //AudioTrack.playの後はgetMinBufferSizeで取得した
                 //サイズより小さいとonPeriodicNotificationが実行されない。
                 mAudioTrack.play();
-                if (mForceStopTimer != null) mForceStopTimer.cancel();
-                mForceStopTimer = new ForceStopTimer();
-                timer.schedule(mForceStopTimer, 10000);
+                if (mForceStopTimerTask != null) mForceStopTimerTask.cancel();
+                mForceStopTimerTask = new ForceStopTimer();
+                mForceStopTimer.schedule(mForceStopTimerTask, 10000);
 
                 mBackgroundRunnable = new BackgroundThread(clickedButton);
                 new Thread(mBackgroundRunnable).start();
@@ -273,7 +276,7 @@ public class PlaceholderFragment extends Fragment {
                     Thread.sleep(200);
                 } catch (InterruptedException e) {
                 }
-                handler.post(new Runnable() {
+                mHandler.post(new Runnable() {
                     public void run() {
                         String now = mClickedButton.getRightIcon();
                         String next = mFaMap.get("fa-volume-up");
@@ -291,7 +294,7 @@ public class PlaceholderFragment extends Fragment {
                 });
             }
 
-            handler.post(new Runnable() {
+            mHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     mClickedButton.setRightIcon(mFaMap.get("fa-play"));
@@ -303,7 +306,7 @@ public class PlaceholderFragment extends Fragment {
     class ForceStopTimer extends TimerTask {
         @Override
         public void run() {
-            handler.post(new Runnable() {
+            mHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
