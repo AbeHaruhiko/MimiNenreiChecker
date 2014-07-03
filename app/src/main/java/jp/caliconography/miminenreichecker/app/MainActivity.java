@@ -226,12 +226,12 @@ public class MainActivity extends ActionBarActivity
                         }
                     }
             );
-            sinWaveGenerator1 = new SinWaveGenerator(440, 1);
-            sinWaveGenerator2 = new SinWaveGenerator(880, 1);
-            sinWaveGenerator3 = new SinWaveGenerator(16000, 1);
-            sinWaveGenerator4 = new SinWaveGenerator(18000, 1);
-            sinWaveGenerator5 = new SinWaveGenerator(20000, 1);
-            sinWaveGenerator6 = new SinWaveGenerator(21000, 1);
+            sinWaveGenerator1 = new SinWaveGenerator(440, 1, mSamplerate);
+            sinWaveGenerator2 = new SinWaveGenerator(880, 1, mSamplerate);
+            sinWaveGenerator3 = new SinWaveGenerator(16000, 1, mSamplerate);
+            sinWaveGenerator4 = new SinWaveGenerator(18000, 1, mSamplerate);
+            sinWaveGenerator5 = new SinWaveGenerator(20000, 1, mSamplerate);
+            sinWaveGenerator6 = new SinWaveGenerator(21000, 1, mSamplerate);
 
 
             mBtnLv1 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv1);
@@ -449,23 +449,6 @@ public class MainActivity extends ActionBarActivity
                         mClickedButton.setRightIcon(mFaMap.get("fa-play"));
                     }
                 });
-            }
-        }
-
-        class SinWaveGenerator {
-            public double freq = 0;
-            public double amp = 0;
-            public double phase = 0;
-
-            public SinWaveGenerator(double f, double a) {
-                freq = f;
-                amp = a;
-            }
-
-            public double generateSinWave() {
-                phase += freq / mSamplerate;
-                phase = (phase > 1) ? 0 : phase;
-                return Math.sin(2 * Math.PI * phase) * amp;
             }
         }
 
