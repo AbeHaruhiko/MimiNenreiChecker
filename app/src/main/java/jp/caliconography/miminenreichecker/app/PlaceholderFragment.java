@@ -34,8 +34,7 @@ public class PlaceholderFragment extends Fragment {
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "1";
-    private final int mFrequency = 17000;
-    //        private Thread backgroundThread;
+
     private AudioTrack mAudioTrack;
     private CustomFontButtonWithRightIcon mBtnLv1;
     private CustomFontButtonWithRightIcon mBtnLv2;
@@ -54,9 +53,7 @@ public class PlaceholderFragment extends Fragment {
     private SinWaveGenerator sinWaveGenerator5;
     private SinWaveGenerator sinWaveGenerator6;
     private HashMap<View, SinWaveGenerator> mBtnGenMap = new HashMap<View, SinWaveGenerator>();
-    private int mSamplerate = 44100;
     private short[] mSoundBuffer;
-    private int mSoundBufferSize;
     private ForceStopTimer mForceStopTimer;
     private Map<String, String> mFaMap = FontAwesome.getFaMap();
     private BackgroundThread mBackgroundRunnable;
@@ -82,27 +79,28 @@ public class PlaceholderFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         //バッファーサイズの取得
-        mSoundBufferSize = AudioTrack.getMinBufferSize(
-                mSamplerate,
+        int sampleRate = 44100;
+        int soundBufferSize = AudioTrack.getMinBufferSize(
+                sampleRate,
                 AudioFormat.CHANNEL_OUT_MONO,
                 AudioFormat.ENCODING_PCM_16BIT);
         //AudioTrackの初期化
         mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
                 //サンプリング定数
-                mSamplerate,
+                sampleRate,
                 //モノラル
                 AudioFormat.CHANNEL_OUT_MONO,
                 //16bit
                 AudioFormat.ENCODING_PCM_16BIT,
                 //バッファーサイズ
-                mSoundBufferSize,
+                soundBufferSize,
                 //ストリームモード
                 AudioTrack.MODE_STREAM);
 
-        mSoundBuffer = new short[mSoundBufferSize];
-        Log.d("", String.valueOf(mSoundBufferSize));
+        mSoundBuffer = new short[soundBufferSize];
+        Log.d("", String.valueOf(soundBufferSize));
         //所得したバッファーサイズごとに通知させる。
-        mAudioTrack.setPositionNotificationPeriod(mSoundBufferSize);
+        mAudioTrack.setPositionNotificationPeriod(soundBufferSize);
         mAudioTrack.setPlaybackPositionUpdateListener(
                 new AudioTrack.OnPlaybackPositionUpdateListener() {
                     public void onMarkerReached(AudioTrack track) {
@@ -115,12 +113,12 @@ public class PlaceholderFragment extends Fragment {
                     }
                 }
         );
-        sinWaveGenerator1 = new SinWaveGenerator(440, 1, mSamplerate);
-        sinWaveGenerator2 = new SinWaveGenerator(880, 1, mSamplerate);
-        sinWaveGenerator3 = new SinWaveGenerator(16000, 1, mSamplerate);
-        sinWaveGenerator4 = new SinWaveGenerator(18000, 1, mSamplerate);
-        sinWaveGenerator5 = new SinWaveGenerator(20000, 1, mSamplerate);
-        sinWaveGenerator6 = new SinWaveGenerator(21000, 1, mSamplerate);
+        sinWaveGenerator1 = new SinWaveGenerator(440, 1, sampleRate);
+        sinWaveGenerator2 = new SinWaveGenerator(880, 1, sampleRate);
+        sinWaveGenerator3 = new SinWaveGenerator(16000, 1, sampleRate);
+        sinWaveGenerator4 = new SinWaveGenerator(18000, 1, sampleRate);
+        sinWaveGenerator5 = new SinWaveGenerator(20000, 1, sampleRate);
+        sinWaveGenerator6 = new SinWaveGenerator(21000, 1, sampleRate);
 
 
         mBtnLv1 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv1);
@@ -142,19 +140,19 @@ public class PlaceholderFragment extends Fragment {
         mBtnGenMap.put(mBtnLv5, sinWaveGenerator5);
         mBtnGenMap.put(mBtnLv6, sinWaveGenerator6);
 
-        View.OnClickListener onClickListener = new View.OnClickListener() {
+        View.OnClickListener onLvBtnClickListener = new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 doOnClick(view);
             }
         };
-        mBtnLv1.setOnClickListener(onClickListener);
-        mBtnLv2.setOnClickListener(onClickListener);
-        mBtnLv3.setOnClickListener(onClickListener);
-        mBtnLv4.setOnClickListener(onClickListener);
-        mBtnLv5.setOnClickListener(onClickListener);
-        mBtnLv6.setOnClickListener(onClickListener);
+        mBtnLv1.setOnClickListener(onLvBtnClickListener);
+        mBtnLv2.setOnClickListener(onLvBtnClickListener);
+        mBtnLv3.setOnClickListener(onLvBtnClickListener);
+        mBtnLv4.setOnClickListener(onLvBtnClickListener);
+        mBtnLv5.setOnClickListener(onLvBtnClickListener);
+        mBtnLv6.setOnClickListener(onLvBtnClickListener);
 
         return rootView;
     }
@@ -183,45 +181,6 @@ public class PlaceholderFragment extends Fragment {
                 mForceStopTimer = new ForceStopTimer();
                 timer.schedule(mForceStopTimer, 10000);
 
-//                    backgroundThread = new Thread(new Runnable() {
-//                        public boolean running = true;
-//                        public void run() {
-//                            while (running) {
-//                                if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-//                                    // スリープ処理をmHandler.postの外でやってみる
-//                                    try {
-//                                        Thread.sleep(200);
-//                                    } catch (InterruptedException e) {
-//                                    }
-//                                    handler.post(new Runnable() {
-//                                        public void run() {
-//                                            String now = clickedButton.getRightIcon();
-//                                            String next = mFaMap.get("fa-volume-up");
-//                                            if (now.equals(mFaMap.get("fa-volume-off"))) {
-//                                                next = mFaMap.get("fa-volume-down");
-//                                            } else if (now.contains(mFaMap.get("fa-volume-down"))) {
-//                                                next = mFaMap.get("fa-volume-up");
-//                                            } else if (now.contains(mFaMap.get("fa-volume-up"))) {
-//                                                next = mFaMap.get("fa-volume-off");
-//                                            } else {
-//                                                next = mFaMap.get("fa-volume-off");
-//                                            }
-//                                            clickedButton.setRightIcon(next);
-//                                        }
-//                                    });
-//                                /* ここら辺にループ抜ける処理とか */
-//                                } else {
-//                                    handler.post(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            clickedButton.setRightIcon(mFaMap.get("fa-play"));
-//                                        }
-//                                    });
-//                                    break;
-//                                }
-//                            }
-//                        }
-//                    });
                 mBackgroundRunnable = new BackgroundThread(clickedButton);
                 new Thread(mBackgroundRunnable).start();
                 Log.d(TAG, "4");
