@@ -1,7 +1,6 @@
 package jp.caliconography.miminenreichecker.app;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -13,8 +12,7 @@ import jp.caliconography.android.miminenreichecker.app.R;
 
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks,
-        DiagnosisFragment.OnFragmentInteractionListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     final static String TAG = MainActivity.class.getSimpleName();
 
@@ -47,23 +45,23 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        fragmentManager.beginTransaction()
-//                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-//                .commit();
-        Fragment fragment = PlaceholderFragment.newInstance(position + 1);
         FragmentManager fragmentManager = getSupportFragmentManager();
-        switch (position) {
-            case 0:
-                fragment = PlaceholderFragment.newInstance(position + 1);
-                break;
-            case 1:
-                fragment = DiagnosisFragment.newInstance(position + 1);
-                break;
-        }
         fragmentManager.beginTransaction()
-                .replace(R.id.container, fragment)
+                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
+//        Fragment fragment = PlaceholderFragment.newInstance(position + 1);
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        switch (position) {
+//            case 0:
+//                fragment = PlaceholderFragment.newInstance(position + 1);
+//                break;
+//            case 1:
+//                fragment = DiagnosisFragment.newInstance(position + 1);
+//                break;
+//        }
+//        fragmentManager.beginTransaction()
+//                .replace(R.id.container, fragment)
+//                .commit();
     }
 
     public void onSectionAttached(int number) {
@@ -111,10 +109,5 @@ public class MainActivity extends ActionBarActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onFragmentInteraction() {
-
     }
 }
