@@ -33,7 +33,7 @@ public class PlaceholderFragment extends Fragment {
      * The fragment argument representing the section number for this
      * fragment.
      */
-    private static final String ARG_SECTION_NUMBER = "1";
+    private static final String ARG_SECTION_NUMBER = "section_number";
 
     private AudioTrack mAudioTrack;
     private CustomFontButtonWithRightIcon mBtnLv1;
@@ -147,7 +147,7 @@ public class PlaceholderFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
-                doOnClick(view);
+                doOnLvBtnClick(view);
             }
         };
         mBtnLv1.setOnClickListener(onLvBtnClickListener);
@@ -160,7 +160,7 @@ public class PlaceholderFragment extends Fragment {
         return rootView;
     }
 
-    private void doOnClick(final View view) {
+    private void doOnLvBtnClick(final View view) {
         Log.d(TAG, "1");
         if (mAudioTrack != null) {
             final CustomFontButtonWithRightIcon clickedButton = ((CustomFontButtonWithRightIcon) view);
@@ -222,7 +222,7 @@ public class PlaceholderFragment extends Fragment {
 //                                mCurrentWaveGenerator = null;
                 } else {
                     Log.d(TAG, "13");
-                    doOnClick(view);
+                    doOnLvBtnClick(view);
                 }
                 Log.d(TAG, "14");
             }
