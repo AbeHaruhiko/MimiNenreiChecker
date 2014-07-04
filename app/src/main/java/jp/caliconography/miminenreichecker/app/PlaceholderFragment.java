@@ -21,6 +21,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import jp.caliconography.android.miminenreichecker.app.R;
+import jp.caliconography.android.widget.CustomFontButton;
 import jp.caliconography.android.widget.CustomFontButtonWithRightIcon;
 
 /**
@@ -58,6 +59,10 @@ public class PlaceholderFragment extends Fragment {
     private Map<String, String> mFaMap = FontAwesome.getFaMap();
     private BackgroundThread mBackgroundRunnable;
 
+    private CustomFontButton mBtnStartDiag;
+    private CustomFontButton mBtnStopDiag;
+    private CustomFontButton mBtnGotIt;
+
     public PlaceholderFragment() {
         /**
          * ここには何も書かない（書いてはいけない）
@@ -79,10 +84,62 @@ public class PlaceholderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        int sampleRate = 44100;
+        View rootView = null;
+
+        mSinWaveGenerator1 = new SinWaveGenerator(440, 1, sampleRate);
+        mSinWaveGenerator2 = new SinWaveGenerator(880, 1, sampleRate);
+        mSinWaveGenerator3 = new SinWaveGenerator(16000, 1, sampleRate);
+        mSinWaveGenerator4 = new SinWaveGenerator(18000, 1, sampleRate);
+        mSinWaveGenerator5 = new SinWaveGenerator(20000, 1, sampleRate);
+        mSinWaveGenerator6 = new SinWaveGenerator(21000, 1, sampleRate);
+
+        switch (this.getArguments().getInt(ARG_SECTION_NUMBER)) {
+            case 1:
+                rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+                mBtnLv1 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv1);
+                mBtnLv2 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv2);
+                mBtnLv3 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv3);
+                mBtnLv4 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv4);
+                mBtnLv5 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv5);
+                mBtnLv6 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv6);
+
+                mButtonList.add(mBtnLv1);
+                mButtonList.add(mBtnLv2);
+                mButtonList.add(mBtnLv3);
+                mButtonList.add(mBtnLv4);
+                mButtonList.add(mBtnLv5);
+                mButtonList.add(mBtnLv6);
+
+                mBtnGenMap.put(mBtnLv1, mSinWaveGenerator1);
+                mBtnGenMap.put(mBtnLv2, mSinWaveGenerator2);
+                mBtnGenMap.put(mBtnLv3, mSinWaveGenerator3);
+                mBtnGenMap.put(mBtnLv4, mSinWaveGenerator4);
+                mBtnGenMap.put(mBtnLv5, mSinWaveGenerator5);
+                mBtnGenMap.put(mBtnLv6, mSinWaveGenerator6);
+
+                View.OnClickListener onLvBtnClickListener = new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        doOnLvBtnClick(view);
+                    }
+                };
+                mBtnLv1.setOnClickListener(onLvBtnClickListener);
+                mBtnLv2.setOnClickListener(onLvBtnClickListener);
+                mBtnLv3.setOnClickListener(onLvBtnClickListener);
+                mBtnLv4.setOnClickListener(onLvBtnClickListener);
+                mBtnLv5.setOnClickListener(onLvBtnClickListener);
+                mBtnLv6.setOnClickListener(onLvBtnClickListener);
+
+                break;
+            case 2:
+                rootView = inflater.inflate(R.layout.fragment_diagnosis, container, false);
+                break;
+        }
 
         //バッファーサイズの取得
-        int sampleRate = 44100;
         int soundBufferSize = AudioTrack.getMinBufferSize(
                 sampleRate,
                 AudioFormat.CHANNEL_OUT_MONO,
@@ -116,46 +173,6 @@ public class PlaceholderFragment extends Fragment {
                     }
                 }
         );
-        mSinWaveGenerator1 = new SinWaveGenerator(440, 1, sampleRate);
-        mSinWaveGenerator2 = new SinWaveGenerator(880, 1, sampleRate);
-        mSinWaveGenerator3 = new SinWaveGenerator(16000, 1, sampleRate);
-        mSinWaveGenerator4 = new SinWaveGenerator(18000, 1, sampleRate);
-        mSinWaveGenerator5 = new SinWaveGenerator(20000, 1, sampleRate);
-        mSinWaveGenerator6 = new SinWaveGenerator(21000, 1, sampleRate);
-
-
-        mBtnLv1 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv1);
-        mBtnLv2 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv2);
-        mBtnLv3 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv3);
-        mBtnLv4 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv4);
-        mBtnLv5 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv5);
-        mBtnLv6 = (CustomFontButtonWithRightIcon) rootView.findViewById(R.id.btn_lv6);
-        mButtonList.add(mBtnLv1);
-        mButtonList.add(mBtnLv2);
-        mButtonList.add(mBtnLv3);
-        mButtonList.add(mBtnLv4);
-        mButtonList.add(mBtnLv5);
-        mButtonList.add(mBtnLv6);
-        mBtnGenMap.put(mBtnLv1, mSinWaveGenerator1);
-        mBtnGenMap.put(mBtnLv2, mSinWaveGenerator2);
-        mBtnGenMap.put(mBtnLv3, mSinWaveGenerator3);
-        mBtnGenMap.put(mBtnLv4, mSinWaveGenerator4);
-        mBtnGenMap.put(mBtnLv5, mSinWaveGenerator5);
-        mBtnGenMap.put(mBtnLv6, mSinWaveGenerator6);
-
-        View.OnClickListener onLvBtnClickListener = new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                doOnLvBtnClick(view);
-            }
-        };
-        mBtnLv1.setOnClickListener(onLvBtnClickListener);
-        mBtnLv2.setOnClickListener(onLvBtnClickListener);
-        mBtnLv3.setOnClickListener(onLvBtnClickListener);
-        mBtnLv4.setOnClickListener(onLvBtnClickListener);
-        mBtnLv5.setOnClickListener(onLvBtnClickListener);
-        mBtnLv6.setOnClickListener(onLvBtnClickListener);
 
         return rootView;
     }

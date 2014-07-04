@@ -31,4 +31,34 @@
         android:textSize="24sp"
         caliconography:customFont="fontawesome-webfont.ttf" />
 
+    <view
+        android:id="@+id/btn_got_it"
+        class="jp.caliconography.android.widget.CustomFontButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="false"
+        android:layout_below="@+id/textView"
+        android:layout_margin="48dp"
+        android:background="@drawable/btn_common_back"
+        android:padding="@dimen/padding_level_button"
+        android:text="&#xf087; 聴こえた！"
+        android:textSize="24sp"
+        android:visibility="gone"
+        caliconography:customFont="fontawesome-webfont.ttf" />
+
+    <view
+        android:id="@+id/btn_stop"
+        class="jp.caliconography.android.widget.CustomFontButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/textView"
+        android:layout_alignRight="@+id/textView"
+        android:layout_alignTop="@+id/textView"
+        android:background="@drawable/btn_common_back"
+        android:padding="@dimen/padding_level_button"
+        android:text="&#xf04d; 中止"
+        android:textSize="24sp"
+        android:visibility="gone"
+        caliconography:customFont="fontawesome-webfont.ttf" />
+
 </RelativeLayout>
