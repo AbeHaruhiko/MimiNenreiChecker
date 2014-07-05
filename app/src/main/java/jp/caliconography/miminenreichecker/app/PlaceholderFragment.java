@@ -154,14 +154,14 @@ public class PlaceholderFragment extends Fragment {
                 mBtnStopDiag = (CustomFontButton) rootView.findViewById(R.id.btn_stop);
                 mBtnGotIt = (CustomFontButton) rootView.findViewById(R.id.btn_got_it);
 
-                View.OnClickListener onDiagBtnClickListener = new View.OnClickListener() {
+                View.OnClickListener onStartDiagBtnClickListener = new View.OnClickListener() {
 
                     @Override
                     public void onClick(View view) {
                         doOnDiagBtnClick(view);
                     }
                 };
-                mBtnStartDiag.setOnClickListener(onDiagBtnClickListener);
+                mBtnStartDiag.setOnClickListener(onStartDiagBtnClickListener);
                 mBtnStopDiag.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -171,7 +171,7 @@ public class PlaceholderFragment extends Fragment {
                         if (mScheduledExecutor != null) mScheduledExecutor.shutdown();
                     }
                 });
-                mBtnGotIt.setOnClickListener(onDiagBtnClickListener);
+                mBtnGotIt.setOnClickListener(onStartDiagBtnClickListener);
 
                 break;
         }
