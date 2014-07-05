@@ -23,6 +23,10 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import jp.caliconography.android.miminenreichecker.app.R;
 import jp.caliconography.android.widget.CustomFontButton;
@@ -68,6 +72,8 @@ public class PlaceholderFragment extends Fragment {
     private CustomFontButton mBtnStartDiag;
     private CustomFontButton mBtnStopDiag;
     private CustomFontButton mBtnGotIt;
+    private ScheduledFuture<?> mScheduledFuture;
+    private ScheduledExecutorService mScheduledExecutor;
 
     public PlaceholderFragment() {
         /**
@@ -159,7 +165,10 @@ public class PlaceholderFragment extends Fragment {
                 mBtnStopDiag.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mRunnnableForRandomPlay.running = false;
+                        if (mRunnnableForRandomPlay != null)
+                            mRunnnableForRandomPlay.running = false;
+                        if (mScheduledFuture != null) mScheduledFuture.cancel(true);
+                        if (mScheduledExecutor != null) mScheduledExecutor.shutdown();
                     }
                 });
                 mBtnGotIt.setOnClickListener(onDiagBtnClickListener);
@@ -272,7 +281,9 @@ public class PlaceholderFragment extends Fragment {
             mBtnGotIt.setVisibility(View.VISIBLE);
 
             mRunnnableForRandomPlay = new RunnnableForRandomPlay();
-            new Thread(mRunnnableForRandomPlay).start();
+//            new Thread(mRunnnableForRandomPlay).start();
+            mScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+            mScheduledFuture = mScheduledExecutor.schedule(mRunnnableForRandomPlay, 0, TimeUnit.MILLISECONDS);
 
 //            final CustomFontButton clickedButton = ((CustomFontButton) view);
 //            if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_STOPPED) {
