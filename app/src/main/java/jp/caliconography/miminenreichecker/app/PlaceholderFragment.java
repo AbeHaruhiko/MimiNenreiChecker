@@ -57,7 +57,7 @@ public class PlaceholderFragment extends Fragment {
     private HashMap<View, SinWaveGenerator> mBtnGenMap = new HashMap<View, SinWaveGenerator>();
     private short[] mSoundBuffer;
     private Map<String, String> mFaMap = FontAwesome.getFaMap();
-    private BackgroundThread mBackgroundRunnable;
+    private RunnnableForUpdateRightIcon mRunnableForUpdateRightIcon;
 
     private CustomFontButton mBtnStartDiag;
     private CustomFontButton mBtnStopDiag;
@@ -136,6 +136,22 @@ public class PlaceholderFragment extends Fragment {
                 break;
             case 2:
                 rootView = inflater.inflate(R.layout.fragment_diagnosis, container, false);
+
+                mBtnStartDiag = (CustomFontButton) rootView.findViewById(R.id.btn_start_diag);
+                mBtnStopDiag = (CustomFontButton) rootView.findViewById(R.id.btn_stop);
+                mBtnGotIt = (CustomFontButton) rootView.findViewById(R.id.btn_got_it);
+
+                View.OnClickListener onDiagBtnClickListener = new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        doOnDiagBtnClick(view);
+                    }
+                };
+                mBtnStartDiag.setOnClickListener(onDiagBtnClickListener);
+                mBtnStopDiag.setOnClickListener(onDiagBtnClickListener);
+                mBtnGotIt.setOnClickListener(onDiagBtnClickListener);
+
                 break;
         }
 
@@ -178,11 +194,10 @@ public class PlaceholderFragment extends Fragment {
     }
 
     private void doOnLvBtnClick(final View view) {
-        Log.d(TAG, "1");
+
         if (mAudioTrack != null) {
             final CustomFontButtonWithRightIcon clickedButton = ((CustomFontButtonWithRightIcon) view);
             if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_STOPPED) {
-                Log.d(TAG, "2");
 
                 mCurrentWaveGenerator = view == mBtnLv1 ? mSinWaveGenerator1
                         : view == mBtnLv2 ? mSinWaveGenerator2
@@ -190,7 +205,6 @@ public class PlaceholderFragment extends Fragment {
                         : view == mBtnLv4 ? mSinWaveGenerator4
                         : view == mBtnLv5 ? mSinWaveGenerator5
                         : mSinWaveGenerator6;
-                Log.d(TAG, "3");
 
                 //ボタンが押されたら再生する。
                 mAudioTrack.setStereoVolume(0, 0);
@@ -201,49 +215,93 @@ public class PlaceholderFragment extends Fragment {
                 mForceStopTimerTask = new ForceStopTimer();
                 mForceStopTimer.schedule(mForceStopTimerTask, 10000);
 
-                mBackgroundRunnable = new BackgroundThread(clickedButton);
-                new Thread(mBackgroundRunnable).start();
-                Log.d(TAG, "4");
+                mRunnableForUpdateRightIcon = new RunnnableForUpdateRightIcon(clickedButton);
+                new Thread(mRunnableForUpdateRightIcon).start();
 
                 writeSound();
                 mAudioTrack.setStereoVolume(1, 1);
-                Log.d(TAG, "5");
 
                 for (CustomFontButtonWithRightIcon item : mButtonList) {
-                    Log.d(TAG, "6");
+
                     if (item == clickedButton) {
 //                            item.setText(item.getText().toString().replace(FontAwesome.getFaMap().get("fa-play"), FontAwesome.getFaMap().get("fa-pause")));
                     } else {
                         item.setRightIcon(mFaMap.get("fa-play"));
                     }
                 }
-                Log.d(TAG, "7");
             } else if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-                Log.d(TAG, "8");
-
                 //ボタンが押されたら停止
-                mBackgroundRunnable.running = false;
+                mRunnableForUpdateRightIcon.running = false;
                 mAudioTrack.setStereoVolume(0, 0);
                 mAudioTrack.stop();
-                Log.d(TAG, "9");
 
                 for (CustomFontButtonWithRightIcon item : mButtonList) {
-                    Log.d(TAG, "10");
                     item.setRightIcon(mFaMap.get("fa-play"));
                 }
-                Log.d(TAG, "11");
 
                 if (mBtnGenMap.get(clickedButton) == mCurrentWaveGenerator) {
-                    Log.d(TAG, "12");
                     // 再生中のLvのボタンが押された
 //                                mCurrentWaveGenerator = null;
                 } else {
-                    Log.d(TAG, "13");
                     doOnLvBtnClick(view);
                 }
-                Log.d(TAG, "14");
             }
-            Log.d(TAG, "15");
+        }
+    }
+
+    private void doOnDiagBtnClick(final View view) {
+
+        if (mAudioTrack != null) {
+            final CustomFontButton clickedButton = ((CustomFontButton) view);
+            if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_STOPPED) {
+
+                mCurrentWaveGenerator = view == mBtnLv1 ? mSinWaveGenerator1
+                        : view == mBtnLv2 ? mSinWaveGenerator2
+                        : view == mBtnLv3 ? mSinWaveGenerator3
+                        : view == mBtnLv4 ? mSinWaveGenerator4
+                        : view == mBtnLv5 ? mSinWaveGenerator5
+                        : mSinWaveGenerator6;
+
+                //ボタンが押されたら再生する。
+                mAudioTrack.setStereoVolume(0, 0);
+                //AudioTrack.playの後はgetMinBufferSizeで取得した
+                //サイズより小さいとonPeriodicNotificationが実行されない。
+                mAudioTrack.play();
+                if (mForceStopTimerTask != null) mForceStopTimerTask.cancel();
+                mForceStopTimerTask = new ForceStopTimer();
+                mForceStopTimer.schedule(mForceStopTimerTask, 10000);
+
+                mRunnableForUpdateRightIcon = new RunnnableForUpdateRightIcon(clickedButton);
+                new Thread(mRunnableForUpdateRightIcon).start();
+
+                writeSound();
+                mAudioTrack.setStereoVolume(1, 1);
+
+                for (CustomFontButtonWithRightIcon item : mButtonList) {
+
+                    if (item == clickedButton) {
+//                            item.setText(item.getText().toString().replace(FontAwesome.getFaMap().get("fa-play"), FontAwesome.getFaMap().get("fa-pause")));
+                    } else {
+                        item.setRightIcon(mFaMap.get("fa-play"));
+                    }
+                }
+            } else if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+                //ボタンが押されたら停止
+                mRunnableForUpdateRightIcon.running = false;
+                mAudioTrack.setStereoVolume(0, 0);
+                mAudioTrack.stop();
+
+                for (CustomFontButtonWithRightIcon item : mButtonList) {
+                    item.setRightIcon(mFaMap.get("fa-play"));
+                }
+
+                if (mBtnGenMap.get(clickedButton) == mCurrentWaveGenerator) {
+                    // 再生中のLvのボタンが押された
+//                                mCurrentWaveGenerator = null;
+                } else {
+                    doOnLvBtnClick(view);
+                }
+            }
         }
     }
 
@@ -276,12 +334,12 @@ public class PlaceholderFragment extends Fragment {
         mAudioTrack.write(mSoundBuffer, 0, mSoundBuffer.length);
     }
 
-    class BackgroundThread implements Runnable {
+    class RunnnableForUpdateRightIcon implements Runnable {
 
         protected boolean running = true;
         private CustomFontButtonWithRightIcon mClickedButton;
 
-        public BackgroundThread(CustomFontButtonWithRightIcon button) {
+        public RunnnableForUpdateRightIcon(CustomFontButtonWithRightIcon button) {
             this.mClickedButton = button;
         }
 
@@ -330,7 +388,7 @@ public class PlaceholderFragment extends Fragment {
                         mAudioTrack.setStereoVolume(0, 0);
                         mAudioTrack.stop();
                     }
-                    mBackgroundRunnable.running = false;
+                    mRunnableForUpdateRightIcon.running = false;
                     for (CustomFontButtonWithRightIcon item : mButtonList) {
                         item.setRightIcon(mFaMap.get("fa-play"));
                     }
