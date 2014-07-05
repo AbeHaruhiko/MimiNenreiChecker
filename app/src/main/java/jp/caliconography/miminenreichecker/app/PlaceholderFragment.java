@@ -11,12 +11,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.FontAwesome;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -45,7 +49,7 @@ public class PlaceholderFragment extends Fragment {
     private CustomFontButtonWithRightIcon mBtnLv6;
     private ArrayList<CustomFontButtonWithRightIcon> mButtonList = new ArrayList<CustomFontButtonWithRightIcon>();
     private Timer mForceStopTimer = new Timer();
-    private ForceStopTimer mForceStopTimerTask;
+    private ForceStopTimerTask mForceStopTimerTask;
     private Handler mHandler = new Handler();
     private SinWaveGenerator mCurrentWaveGenerator;
     private SinWaveGenerator mSinWaveGenerator1;
@@ -58,7 +62,9 @@ public class PlaceholderFragment extends Fragment {
     private short[] mSoundBuffer;
     private Map<String, String> mFaMap = FontAwesome.getFaMap();
     private RunnnableForUpdateRightIcon mRunnableForUpdateRightIcon;
+    private RunnnableForRandomPlay mRunnnableForRandomPlay;
 
+    private TextView mLblDiagDesc;
     private CustomFontButton mBtnStartDiag;
     private CustomFontButton mBtnStopDiag;
     private CustomFontButton mBtnGotIt;
@@ -89,10 +95,10 @@ public class PlaceholderFragment extends Fragment {
 
         mSinWaveGenerator1 = new SinWaveGenerator(440, 1, sampleRate);
         mSinWaveGenerator2 = new SinWaveGenerator(880, 1, sampleRate);
-        mSinWaveGenerator3 = new SinWaveGenerator(16000, 1, sampleRate);
-        mSinWaveGenerator4 = new SinWaveGenerator(18000, 1, sampleRate);
-        mSinWaveGenerator5 = new SinWaveGenerator(20000, 1, sampleRate);
-        mSinWaveGenerator6 = new SinWaveGenerator(21000, 1, sampleRate);
+        mSinWaveGenerator3 = new SinWaveGenerator(1600, 1, sampleRate);
+        mSinWaveGenerator4 = new SinWaveGenerator(1800, 1, sampleRate);
+        mSinWaveGenerator5 = new SinWaveGenerator(2000, 1, sampleRate);
+        mSinWaveGenerator6 = new SinWaveGenerator(2100, 1, sampleRate);
 
         switch (this.getArguments().getInt(ARG_SECTION_NUMBER)) {
             case 1:
@@ -137,6 +143,7 @@ public class PlaceholderFragment extends Fragment {
             case 2:
                 rootView = inflater.inflate(R.layout.fragment_diagnosis, container, false);
 
+                mLblDiagDesc = (TextView) rootView.findViewById(R.id.lbl_diag_desc);
                 mBtnStartDiag = (CustomFontButton) rootView.findViewById(R.id.btn_start_diag);
                 mBtnStopDiag = (CustomFontButton) rootView.findViewById(R.id.btn_stop);
                 mBtnGotIt = (CustomFontButton) rootView.findViewById(R.id.btn_got_it);
@@ -149,7 +156,12 @@ public class PlaceholderFragment extends Fragment {
                     }
                 };
                 mBtnStartDiag.setOnClickListener(onDiagBtnClickListener);
-                mBtnStopDiag.setOnClickListener(onDiagBtnClickListener);
+                mBtnStopDiag.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mRunnnableForRandomPlay.running = false;
+                    }
+                });
                 mBtnGotIt.setOnClickListener(onDiagBtnClickListener);
 
                 break;
@@ -212,8 +224,9 @@ public class PlaceholderFragment extends Fragment {
                 //サイズより小さいとonPeriodicNotificationが実行されない。
                 mAudioTrack.play();
                 if (mForceStopTimerTask != null) mForceStopTimerTask.cancel();
-                mForceStopTimerTask = new ForceStopTimer();
-                mForceStopTimer.schedule(mForceStopTimerTask, 10000);
+                mForceStopTimerTask = new ForceStopTimerTask();
+//                mForceStopTimer.schedule(mForceStopTimerTask, 10000);
+                mHandler.postDelayed(mForceStopTimerTask, 10000);
 
                 mRunnableForUpdateRightIcon = new RunnnableForUpdateRightIcon(clickedButton);
                 new Thread(mRunnableForUpdateRightIcon).start();
@@ -252,56 +265,70 @@ public class PlaceholderFragment extends Fragment {
     private void doOnDiagBtnClick(final View view) {
 
         if (mAudioTrack != null) {
-            final CustomFontButton clickedButton = ((CustomFontButton) view);
-            if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_STOPPED) {
 
-                mCurrentWaveGenerator = view == mBtnLv1 ? mSinWaveGenerator1
-                        : view == mBtnLv2 ? mSinWaveGenerator2
-                        : view == mBtnLv3 ? mSinWaveGenerator3
-                        : view == mBtnLv4 ? mSinWaveGenerator4
-                        : view == mBtnLv5 ? mSinWaveGenerator5
-                        : mSinWaveGenerator6;
+            mLblDiagDesc.setVisibility(View.INVISIBLE);
+            mBtnStartDiag.setVisibility(View.INVISIBLE);
+            mBtnStopDiag.setVisibility(View.VISIBLE);
+            mBtnGotIt.setVisibility(View.VISIBLE);
 
-                //ボタンが押されたら再生する。
-                mAudioTrack.setStereoVolume(0, 0);
-                //AudioTrack.playの後はgetMinBufferSizeで取得した
-                //サイズより小さいとonPeriodicNotificationが実行されない。
-                mAudioTrack.play();
-                if (mForceStopTimerTask != null) mForceStopTimerTask.cancel();
-                mForceStopTimerTask = new ForceStopTimer();
-                mForceStopTimer.schedule(mForceStopTimerTask, 10000);
+            mRunnnableForRandomPlay = new RunnnableForRandomPlay();
+            new Thread(mRunnnableForRandomPlay).start();
 
-                mRunnableForUpdateRightIcon = new RunnnableForUpdateRightIcon(clickedButton);
-                new Thread(mRunnableForUpdateRightIcon).start();
-
-                writeSound();
-                mAudioTrack.setStereoVolume(1, 1);
-
-                for (CustomFontButtonWithRightIcon item : mButtonList) {
-
-                    if (item == clickedButton) {
-//                            item.setText(item.getText().toString().replace(FontAwesome.getFaMap().get("fa-play"), FontAwesome.getFaMap().get("fa-pause")));
-                    } else {
-                        item.setRightIcon(mFaMap.get("fa-play"));
-                    }
-                }
-            } else if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-                //ボタンが押されたら停止
-                mRunnableForUpdateRightIcon.running = false;
-                mAudioTrack.setStereoVolume(0, 0);
-                mAudioTrack.stop();
-
-                for (CustomFontButtonWithRightIcon item : mButtonList) {
-                    item.setRightIcon(mFaMap.get("fa-play"));
-                }
-
-                if (mBtnGenMap.get(clickedButton) == mCurrentWaveGenerator) {
-                    // 再生中のLvのボタンが押された
-//                                mCurrentWaveGenerator = null;
-                } else {
-                    doOnLvBtnClick(view);
-                }
-            }
+//            final CustomFontButton clickedButton = ((CustomFontButton) view);
+//            if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_STOPPED) {
+//
+//                // ランダムに音を再生。
+//                // 周波数：ランダム
+//                // 再生秒数：ランダム（0.5s 〜 1.5s程度）
+//                // 再生休止秒数：ランダム（2s 〜 5s程度）
+//                // 診断時間：15秒
+//                mCurrentWaveGenerator = view == mBtnLv1 ? mSinWaveGenerator1
+//                        : view == mBtnLv2 ? mSinWaveGenerator2
+//                        : view == mBtnLv3 ? mSinWaveGenerator3
+//                        : view == mBtnLv4 ? mSinWaveGenerator4
+//                        : view == mBtnLv5 ? mSinWaveGenerator5
+//                        : mSinWaveGenerator6;
+//
+//                //ボタンが押されたら再生する。
+//                mAudioTrack.setStereoVolume(0, 0);
+//                //AudioTrack.playの後はgetMinBufferSizeで取得した
+//                //サイズより小さいとonPeriodicNotificationが実行されない。
+//                mAudioTrack.play();
+//                if (mForceStopTimerTask != null) mForceStopTimerTask.cancel();
+//                mForceStopTimerTask = new ForceStopTimerTask();
+//                mForceStopTimer.schedule(mForceStopTimerTask, 10000);
+//
+//                mRunnableForUpdateRightIcon = new RunnnableForUpdateRightIcon(clickedButton);
+//                new Thread(mRunnableForUpdateRightIcon).start();
+//
+//                writeSound();
+//                mAudioTrack.setStereoVolume(1, 1);
+//
+//                for (CustomFontButtonWithRightIcon item : mButtonList) {
+//
+//                    if (item == clickedButton) {
+////                            item.setText(item.getText().toString().replace(FontAwesome.getFaMap().get("fa-play"), FontAwesome.getFaMap().get("fa-pause")));
+//                    } else {
+//                        item.setRightIcon(mFaMap.get("fa-play"));
+//                    }
+//                }
+//            } else if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+//                //ボタンが押されたら停止
+//                mRunnableForUpdateRightIcon.running = false;
+//                mAudioTrack.setStereoVolume(0, 0);
+//                mAudioTrack.stop();
+//
+//                for (CustomFontButtonWithRightIcon item : mButtonList) {
+//                    item.setRightIcon(mFaMap.get("fa-play"));
+//                }
+//
+//                if (mBtnGenMap.get(clickedButton) == mCurrentWaveGenerator) {
+//                    // 再生中のLvのボタンが押された
+////                                mCurrentWaveGenerator = null;
+//                } else {
+//                    doOnLvBtnClick(view);
+//                }
+//            }
         }
     }
 
@@ -378,7 +405,7 @@ public class PlaceholderFragment extends Fragment {
         }
     }
 
-    class ForceStopTimer extends TimerTask {
+    class ForceStopTimerTask extends TimerTask {
         @Override
         public void run() {
             mHandler.post(new Runnable() {
@@ -395,6 +422,57 @@ public class PlaceholderFragment extends Fragment {
 
                 }
             });
+        }
+    }
+
+    class RunnnableForRandomPlay implements Runnable {
+
+        protected boolean running = true;
+
+        @Override
+        public void run() {
+            Random random = new Random();
+            List<SinWaveGenerator> waveGenList = Arrays.asList(mSinWaveGenerator1, mSinWaveGenerator2, mSinWaveGenerator3, mSinWaveGenerator4, mSinWaveGenerator5, mSinWaveGenerator6);
+            while (running) {
+                // 停止
+                mAudioTrack.setStereoVolume(0, 0);
+                mAudioTrack.stop();
+
+                // 休止秒数（ミリ秒）
+                try {
+                    int pauseTime = ((2 + random.nextInt(5)) * 1000);
+                    Thread.sleep(pauseTime);
+                } catch (InterruptedException e) {
+                }
+
+                // 周波数を決定
+                int i = random.nextInt(5);
+                mCurrentWaveGenerator = waveGenList.get(i);
+                mAudioTrack.play();
+                writeSound();
+                mAudioTrack.setStereoVolume(1, 1);
+
+                // 再生秒数（ミリ秒）
+                try {
+                    int playTime = ((5 + random.nextInt(10)) * 100);
+                    Thread.sleep(playTime);
+                } catch (InterruptedException e) {
+                }
+            }
+
+            mAudioTrack.setStereoVolume(0, 0);
+            mAudioTrack.stop();
+
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mLblDiagDesc.setVisibility(View.VISIBLE);
+                    mBtnStartDiag.setVisibility(View.VISIBLE);
+                    mBtnStopDiag.setVisibility(View.INVISIBLE);
+                    mBtnGotIt.setVisibility(View.INVISIBLE);
+                }
+            });
+
         }
     }
 }
