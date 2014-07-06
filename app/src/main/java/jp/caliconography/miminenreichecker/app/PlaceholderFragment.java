@@ -306,13 +306,7 @@ public class PlaceholderFragment extends Fragment {
                             mDiagResultPoint--;
                         }
                     }
-//                    else {
-//                        if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-//                            mDiagResultPoint--;
-//                        } else if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_STOPPED) {
-//                            mDiagResultPoint++;
-//                        }
-//                    }
+
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
