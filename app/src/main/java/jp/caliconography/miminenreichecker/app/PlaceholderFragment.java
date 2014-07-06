@@ -74,6 +74,8 @@ public class PlaceholderFragment extends Fragment {
     private CustomFontButton mBtnGotIt;
     private ScheduledFuture<?> mScheduledFuture;
     private ScheduledExecutorService mScheduledExecutor;
+    private int mDiagResultPoint;
+    private TextView point;
 
     public PlaceholderFragment() {
         /**
@@ -153,6 +155,7 @@ public class PlaceholderFragment extends Fragment {
                 mBtnStartDiag = (CustomFontButton) rootView.findViewById(R.id.btn_start_diag);
                 mBtnStopDiag = (CustomFontButton) rootView.findViewById(R.id.btn_stop);
                 mBtnGotIt = (CustomFontButton) rootView.findViewById(R.id.btn_got_it);
+                point = (TextView) rootView.findViewById(R.id.textView2);
 
                 View.OnClickListener onStartDiagBtnClickListener = new View.OnClickListener() {
 
@@ -165,13 +168,41 @@ public class PlaceholderFragment extends Fragment {
                 mBtnStopDiag.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        mLblDiagDesc.setVisibility(View.VISIBLE);
+                        mBtnStartDiag.setVisibility(View.VISIBLE);
+                        mBtnStopDiag.setVisibility(View.INVISIBLE);
+                        mBtnGotIt.setVisibility(View.INVISIBLE);
+
                         if (mRunnnableForRandomPlay != null)
                             mRunnnableForRandomPlay.running = false;
                         if (mScheduledFuture != null) mScheduledFuture.cancel(true);
                         if (mScheduledExecutor != null) mScheduledExecutor.shutdown();
+
+                        point.setText(String.valueOf(mDiagResultPoint));
                     }
                 });
-                mBtnGotIt.setOnClickListener(onStartDiagBtnClickListener);
+//                mBtnGotIt.setOnTouchListener(new View.OnTouchListener() {
+//                    @Override
+//                    public boolean onTouch(View view, MotionEvent motionEvent) {
+//
+//                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+//
+//                            if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+//                                mDiagResultPoint++;
+//                            } else if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_STOPPED) {
+//                                mDiagResultPoint--;
+//                            }
+//                        } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+//                            if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+//                                mDiagResultPoint--;
+//                            } else if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_STOPPED) {
+//                                mDiagResultPoint++;
+//                            }
+//                        }
+//
+//                        return false;
+//                    }
+//                });
 
                 break;
         }
@@ -280,9 +311,38 @@ public class PlaceholderFragment extends Fragment {
             mBtnStopDiag.setVisibility(View.VISIBLE);
             mBtnGotIt.setVisibility(View.VISIBLE);
 
+
+            mScheduledExecutor = Executors.newScheduledThreadPool(2);
+
+            mScheduledExecutor.scheduleWithFixedDelay(new Runnable() {
+                @Override
+                public void run() {
+
+                    if (mBtnGotIt.isPressed()) {
+                        if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+                            mDiagResultPoint++;
+                        } else if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_STOPPED) {
+                            mDiagResultPoint--;
+                        }
+                    }
+//                    else {
+//                        if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+//                            mDiagResultPoint--;
+//                        } else if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_STOPPED) {
+//                            mDiagResultPoint++;
+//                        }
+//                    }
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            point.setText(String.valueOf(mDiagResultPoint));
+                        }
+                    });
+                }
+            }, 0, 500, TimeUnit.MILLISECONDS);
+
             mRunnnableForRandomPlay = new RunnnableForRandomPlay();
 //            new Thread(mRunnnableForRandomPlay).start();
-            mScheduledExecutor = Executors.newSingleThreadScheduledExecutor();
             mScheduledFuture = mScheduledExecutor.schedule(mRunnnableForRandomPlay, 0, TimeUnit.MILLISECONDS);
 
 //            final CustomFontButton clickedButton = ((CustomFontButton) view);
@@ -445,6 +505,9 @@ public class PlaceholderFragment extends Fragment {
             Random random = new Random();
             List<SinWaveGenerator> waveGenList = Arrays.asList(mSinWaveGenerator1, mSinWaveGenerator2, mSinWaveGenerator3, mSinWaveGenerator4, mSinWaveGenerator5, mSinWaveGenerator6);
             while (running) {
+
+                // TODO ScheduledExecutor使ったほうがスマートか。
+
                 // 停止
                 mAudioTrack.setStereoVolume(0, 0);
                 mAudioTrack.stop();
@@ -465,7 +528,7 @@ public class PlaceholderFragment extends Fragment {
 
                 // 再生秒数（ミリ秒）
                 try {
-                    int playTime = ((5 + random.nextInt(10)) * 100);
+                    int playTime = ((2 + random.nextInt(5)) * 1000);
                     Thread.sleep(playTime);
                 } catch (InterruptedException e) {
                 }
@@ -474,15 +537,15 @@ public class PlaceholderFragment extends Fragment {
             mAudioTrack.setStereoVolume(0, 0);
             mAudioTrack.stop();
 
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mLblDiagDesc.setVisibility(View.VISIBLE);
-                    mBtnStartDiag.setVisibility(View.VISIBLE);
-                    mBtnStopDiag.setVisibility(View.INVISIBLE);
-                    mBtnGotIt.setVisibility(View.INVISIBLE);
-                }
-            });
+//            mHandler.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mLblDiagDesc.setVisibility(View.VISIBLE);
+//                    mBtnStartDiag.setVisibility(View.VISIBLE);
+//                    mBtnStopDiag.setVisibility(View.INVISIBLE);
+//                    mBtnGotIt.setVisibility(View.INVISIBLE);
+//                }
+//            });
 
         }
     }
