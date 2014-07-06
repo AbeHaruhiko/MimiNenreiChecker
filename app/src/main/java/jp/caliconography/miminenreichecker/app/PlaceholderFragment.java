@@ -168,6 +168,9 @@ public class PlaceholderFragment extends Fragment {
                 mBtnStopDiag.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        mAudioTrack.setStereoVolume(0, 0);
+                        mAudioTrack.stop();
+
                         mLblDiagDesc.setVisibility(View.VISIBLE);
                         mBtnStartDiag.setVisibility(View.VISIBLE);
                         mBtnStopDiag.setVisibility(View.INVISIBLE);
@@ -181,28 +184,6 @@ public class PlaceholderFragment extends Fragment {
                         point.setText(String.valueOf(mDiagResultPoint));
                     }
                 });
-//                mBtnGotIt.setOnTouchListener(new View.OnTouchListener() {
-//                    @Override
-//                    public boolean onTouch(View view, MotionEvent motionEvent) {
-//
-//                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-//
-//                            if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-//                                mDiagResultPoint++;
-//                            } else if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_STOPPED) {
-//                                mDiagResultPoint--;
-//                            }
-//                        } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-//                            if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-//                                mDiagResultPoint--;
-//                            } else if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_STOPPED) {
-//                                mDiagResultPoint++;
-//                            }
-//                        }
-//
-//                        return false;
-//                    }
-//                });
 
                 break;
         }
@@ -345,61 +326,6 @@ public class PlaceholderFragment extends Fragment {
 //            new Thread(mRunnnableForRandomPlay).start();
             mScheduledFuture = mScheduledExecutor.schedule(mRunnnableForRandomPlay, 0, TimeUnit.MILLISECONDS);
 
-//            final CustomFontButton clickedButton = ((CustomFontButton) view);
-//            if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_STOPPED) {
-//
-//                // ランダムに音を再生。
-//                // 周波数：ランダム
-//                // 再生秒数：ランダム（0.5s 〜 1.5s程度）
-//                // 再生休止秒数：ランダム（2s 〜 5s程度）
-//                // 診断時間：15秒
-//                mCurrentWaveGenerator = view == mBtnLv1 ? mSinWaveGenerator1
-//                        : view == mBtnLv2 ? mSinWaveGenerator2
-//                        : view == mBtnLv3 ? mSinWaveGenerator3
-//                        : view == mBtnLv4 ? mSinWaveGenerator4
-//                        : view == mBtnLv5 ? mSinWaveGenerator5
-//                        : mSinWaveGenerator6;
-//
-//                //ボタンが押されたら再生する。
-//                mAudioTrack.setStereoVolume(0, 0);
-//                //AudioTrack.playの後はgetMinBufferSizeで取得した
-//                //サイズより小さいとonPeriodicNotificationが実行されない。
-//                mAudioTrack.play();
-//                if (mForceStopTimerTask != null) mForceStopTimerTask.cancel();
-//                mForceStopTimerTask = new ForceStopTimerTask();
-//                mForceStopTimer.schedule(mForceStopTimerTask, 10000);
-//
-//                mRunnableForUpdateRightIcon = new RunnnableForUpdateRightIcon(clickedButton);
-//                new Thread(mRunnableForUpdateRightIcon).start();
-//
-//                writeSound();
-//                mAudioTrack.setStereoVolume(1, 1);
-//
-//                for (CustomFontButtonWithRightIcon item : mButtonList) {
-//
-//                    if (item == clickedButton) {
-////                            item.setText(item.getText().toString().replace(FontAwesome.getFaMap().get("fa-play"), FontAwesome.getFaMap().get("fa-pause")));
-//                    } else {
-//                        item.setRightIcon(mFaMap.get("fa-play"));
-//                    }
-//                }
-//            } else if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-//                //ボタンが押されたら停止
-//                mRunnableForUpdateRightIcon.running = false;
-//                mAudioTrack.setStereoVolume(0, 0);
-//                mAudioTrack.stop();
-//
-//                for (CustomFontButtonWithRightIcon item : mButtonList) {
-//                    item.setRightIcon(mFaMap.get("fa-play"));
-//                }
-//
-//                if (mBtnGenMap.get(clickedButton) == mCurrentWaveGenerator) {
-//                    // 再生中のLvのボタンが押された
-////                                mCurrentWaveGenerator = null;
-//                } else {
-//                    doOnLvBtnClick(view);
-//                }
-//            }
         }
     }
 
@@ -536,17 +462,6 @@ public class PlaceholderFragment extends Fragment {
 
             mAudioTrack.setStereoVolume(0, 0);
             mAudioTrack.stop();
-
-//            mHandler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    mLblDiagDesc.setVisibility(View.VISIBLE);
-//                    mBtnStartDiag.setVisibility(View.VISIBLE);
-//                    mBtnStopDiag.setVisibility(View.INVISIBLE);
-//                    mBtnGotIt.setVisibility(View.INVISIBLE);
-//                }
-//            });
-
         }
     }
 }
