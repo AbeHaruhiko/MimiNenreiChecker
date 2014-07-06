@@ -1,6 +1,5 @@
 package jp.caliconography.miminenreichecker.app;
 
-import android.app.Activity;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
@@ -333,12 +332,6 @@ public class PlaceholderFragment extends Fragment {
 //                mForceStopTimer.schedule(mForceStopTimerTask, 10000);
             mHandler.postDelayed(mForceStopDiagTimerTask, 30000);
         }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        ((MainActivity) activity).onSectionAttached(getArguments().getInt(ARG_SECTION_NUMBER));
     }
 
     @Override
