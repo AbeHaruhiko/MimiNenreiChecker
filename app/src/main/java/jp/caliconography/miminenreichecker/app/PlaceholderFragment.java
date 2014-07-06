@@ -54,6 +54,7 @@ public class PlaceholderFragment extends Fragment {
     private ArrayList<CustomFontButtonWithRightIcon> mButtonList = new ArrayList<CustomFontButtonWithRightIcon>();
     private Timer mForceStopTimer = new Timer();
     private ForceStopTimerTask mForceStopTimerTask;
+    private ForceStopDiagTimerTask mForceStopDiagTimerTask;
     private Handler mHandler = new Handler();
     private SinWaveGenerator mCurrentWaveGenerator;
     private SinWaveGenerator mSinWaveGenerator1;
@@ -76,6 +77,7 @@ public class PlaceholderFragment extends Fragment {
     private ScheduledExecutorService mScheduledExecutor;
     private int mDiagResultPoint;
     private TextView point;
+    private int mDiagMaxPoint;
 
     public PlaceholderFragment() {
         /**
@@ -287,6 +289,9 @@ public class PlaceholderFragment extends Fragment {
 
         if (mAudioTrack != null) {
 
+            mDiagResultPoint = 0;
+            mDiagMaxPoint = 0;
+
             mLblDiagDesc.setVisibility(View.INVISIBLE);
             mBtnStartDiag.setVisibility(View.INVISIBLE);
             mBtnStopDiag.setVisibility(View.VISIBLE);
@@ -299,6 +304,9 @@ public class PlaceholderFragment extends Fragment {
                 @Override
                 public void run() {
 
+                    if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+                        mDiagMaxPoint++;
+                    }
                     if (mBtnGotIt.isPressed()) {
                         if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
                             mDiagResultPoint++;
@@ -310,7 +318,7 @@ public class PlaceholderFragment extends Fragment {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            point.setText(String.valueOf(mDiagResultPoint));
+                            point.setText(String.valueOf(mDiagResultPoint) + "/" + String.valueOf(mDiagMaxPoint));
                         }
                     });
                 }
@@ -320,6 +328,10 @@ public class PlaceholderFragment extends Fragment {
 //            new Thread(mRunnnableForRandomPlay).start();
             mScheduledFuture = mScheduledExecutor.schedule(mRunnnableForRandomPlay, 0, TimeUnit.MILLISECONDS);
 
+            if (mForceStopDiagTimerTask != null) mForceStopDiagTimerTask.cancel();
+            mForceStopDiagTimerTask = new ForceStopDiagTimerTask();
+//                mForceStopTimer.schedule(mForceStopTimerTask, 10000);
+            mHandler.postDelayed(mForceStopDiagTimerTask, 30000);
         }
     }
 
@@ -402,6 +414,7 @@ public class PlaceholderFragment extends Fragment {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
+
                     if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
                         mAudioTrack.setStereoVolume(0, 0);
                         mAudioTrack.stop();
@@ -413,6 +426,13 @@ public class PlaceholderFragment extends Fragment {
 
                 }
             });
+        }
+    }
+
+    class ForceStopDiagTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            mBtnStopDiag.performClick();
         }
     }
 
