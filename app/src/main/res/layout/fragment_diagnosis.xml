@@ -41,7 +41,7 @@
         android:layout_margin="48dp"
         android:background="@drawable/btn_common_back"
         android:padding="@dimen/padding_level_button"
-        android:text="&#xf087; 聴こえた！"
+        android:text="&#xf087; 鳴ってる！"
         android:textSize="24sp"
         android:visibility="gone"
         caliconography:customFont="fontawesome-webfont.ttf" />
