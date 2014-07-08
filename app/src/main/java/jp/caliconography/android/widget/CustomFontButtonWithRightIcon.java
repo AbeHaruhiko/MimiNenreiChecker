@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import jp.caliconography.android.miminenreichecker.app.R;
+import jp.caliconography.android.miminenreichecker.R;
 
 public class CustomFontButtonWithRightIcon extends LinearLayout {
     private static final String TAG = "CustomFontButton";

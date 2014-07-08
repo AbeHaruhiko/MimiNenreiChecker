@@ -1,0 +1,28 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:caliconography="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="jp.caliconography.miminenreichecker.app.DiagnosisFragment">
+
+    <TextView
+        android:id="@+id/lbl_diag_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        android:textSize="72dp"
+        android:text="%1$d"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        android:textSize="24dp"
+        android:text="点"
+        android:layout_alignBottom="@+id/lbl_diag_point"
+        android:layout_toRightOf="@+id/lbl_diag_point" />
+
+</RelativeLayout>

@@ -27,7 +27,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import jp.caliconography.android.miminenreichecker.app.R;
+import jp.caliconography.android.miminenreichecker.R;
 import jp.caliconography.android.widget.CustomFontButton;
 import jp.caliconography.android.widget.CustomFontButtonWithRightIcon;
 
@@ -247,8 +247,8 @@ public class PlaceholderFragment extends Fragment {
                 mAudioTrack.play();
                 if (mForceStopTimerTask != null) mForceStopTimerTask.cancel();
                 mForceStopTimerTask = new ForceStopTimerTask();
-//                mForceStopTimer.schedule(mForceStopTimerTask, 10000);
-                mHandler.postDelayed(mForceStopTimerTask, 10000);
+                mForceStopTimer.schedule(mForceStopTimerTask, 10000);
+//                mHandler.postDelayed(mForceStopTimerTask, 10000); // こっちはうまく動かない。（キャンセルが効いていない？）
 
                 mRunnableForUpdateRightIcon = new RunnnableForUpdateRightIcon(clickedButton);
                 new Thread(mRunnableForUpdateRightIcon).start();
