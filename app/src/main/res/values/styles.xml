@@ -16,7 +16,5 @@
     <style name="titleTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <!-- タイトルバーの文字色 -->
         <item name="android:textColor">#FFFFFF</item>
-        <!-- タイトルバーの文字スタイル -->
-        <item name="android:textStyle">italic</item>
     </style>
 </resources>
