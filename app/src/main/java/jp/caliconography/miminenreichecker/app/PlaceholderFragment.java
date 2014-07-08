@@ -27,7 +27,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import jp.caliconography.android.miminenreichecker.app.R;
+import jp.caliconography.android.miminenreichecker.R;
 import jp.caliconography.android.widget.CustomFontButton;
 import jp.caliconography.android.widget.CustomFontButtonWithRightIcon;
 
@@ -250,8 +250,10 @@ public class PlaceholderFragment extends Fragment {
 //                mForceStopTimer.schedule(mForceStopTimerTask, 10000);
                 mHandler.postDelayed(mForceStopTimerTask, 10000);
 
+                mScheduledExecutor = Executors.newScheduledThreadPool(2);
                 mRunnableForUpdateRightIcon = new RunnnableForUpdateRightIcon(clickedButton);
-                new Thread(mRunnableForUpdateRightIcon).start();
+//                new Thread(mRunnableForUpdateRightIcon).start();
+                mScheduledFuture = mScheduledExecutor.scheduleWithFixedDelay(mRunnableForUpdateRightIcon, 0, 200, TimeUnit.MILLISECONDS);
 
                 writeSound();
                 mAudioTrack.setStereoVolume(1, 1);
@@ -266,7 +268,8 @@ public class PlaceholderFragment extends Fragment {
                 }
             } else if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
                 //ボタンが押されたら停止
-                mRunnableForUpdateRightIcon.running = false;
+//                mRunnableForUpdateRightIcon.running = false;
+                mScheduledFuture.cancel(true);
                 mAudioTrack.setStereoVolume(0, 0);
                 mAudioTrack.stop();
 
@@ -359,7 +362,7 @@ public class PlaceholderFragment extends Fragment {
 
     class RunnnableForUpdateRightIcon implements Runnable {
 
-        protected boolean running = true;
+//        protected boolean running = true;
         private CustomFontButtonWithRightIcon mClickedButton;
 
         public RunnnableForUpdateRightIcon(CustomFontButtonWithRightIcon button) {
@@ -368,12 +371,12 @@ public class PlaceholderFragment extends Fragment {
 
         @Override
         public void run() {
-            while (running) {
-                // スリープ処理をmHandler.postの外でやってみる
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                }
+//            while (running) {
+//                // スリープ処理をmHandler.postの外でやってみる
+//                try {
+//                    Thread.sleep(200);
+//                } catch (InterruptedException e) {
+//                }
                 mHandler.post(new Runnable() {
                     public void run() {
                         String now = mClickedButton.getRightIcon();
@@ -390,14 +393,14 @@ public class PlaceholderFragment extends Fragment {
                         mClickedButton.setRightIcon(next);
                     }
                 });
-            }
+//            }
 
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mClickedButton.setRightIcon(mFaMap.get("fa-play"));
-                }
-            });
+//            mHandler.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mClickedButton.setRightIcon(mFaMap.get("fa-play"));
+//                }
+//            });
         }
     }
 
@@ -412,7 +415,8 @@ public class PlaceholderFragment extends Fragment {
                         mAudioTrack.setStereoVolume(0, 0);
                         mAudioTrack.stop();
                     }
-                    mRunnableForUpdateRightIcon.running = false;
+//                    mRunnableForUpdateRightIcon.running = false;
+                    mScheduledFuture.cancel(true);
                     for (CustomFontButtonWithRightIcon item : mButtonList) {
                         item.setRightIcon(mFaMap.get("fa-play"));
                     }

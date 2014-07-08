@@ -13,7 +13,7 @@ import android.view.MenuItem;
 
 import java.util.Locale;
 
-import jp.caliconography.android.miminenreichecker.app.R;
+import jp.caliconography.android.miminenreichecker.R;
 
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {

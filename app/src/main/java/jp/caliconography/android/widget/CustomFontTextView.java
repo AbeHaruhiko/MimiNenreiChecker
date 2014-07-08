@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.TextView;
 
-import jp.caliconography.android.miminenreichecker.app.R;
+import jp.caliconography.android.miminenreichecker.R;
 import jp.caliconography.android.util.CachedTypefaces;
 
 public class CustomFontTextView extends TextView {
