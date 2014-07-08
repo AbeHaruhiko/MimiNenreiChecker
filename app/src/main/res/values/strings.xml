@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">耳年齢チェック</string>
-    <string name="title_section1">簡易チェック</string>
+    <string name="title_section1">かんたんチェック</string>
     <string name="title_section2">チャレンジモード</string>
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
