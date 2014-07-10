@@ -29,6 +29,8 @@
         <item name="android:actionModeBackground">@drawable/cab_background_top_miminenreichecker</item>
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_miminenreichecker</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Miminenreichecker</item>
+
+        <!--<item name="android:actionBarTabTextStyle">@style/tabTextStyle</item>-->
     </style>
 
     <style name="ActionBar.Solid.Miminenreichecker" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">

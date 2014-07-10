@@ -9,4 +9,8 @@
         <!-- タイトルバーの文字色 -->
         <item name="android:textColor">#FFFFFF</item>
     </style>
+    <style name="tabTextStyle" parent="Widget.AppCompat.ActionBar.TabText">
+        <!-- タイトルバーの文字色 -->
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
 </resources>
