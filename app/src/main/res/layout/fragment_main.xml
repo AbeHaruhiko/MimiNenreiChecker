@@ -43,7 +43,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_margin="8dp"
                 android:layout_toRightOf="@+id/icn_info"
-                android:text="安全のため再生開始から約10秒後に自動的に停止します。"
+                android:text="再生開始から約10秒後に自動的に停止します。"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <view

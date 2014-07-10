@@ -39,14 +39,18 @@ import jp.caliconography.android.widget.CustomFontButtonWithRightIcon;
  * A placeholder fragment containing a simple view.
  */
 public class PlaceholderFragment extends Fragment {
+    public static final int FREQ_LV1 = 440;
+    public static final int FREQ_LV2 = 880;
+    public static final int FREQ_LV3 = 1600;
+    public static final int FREQ_LV4 = 1800;
+    public static final int FREQ_LV5 = 2000;
+    public static final int FREQ_LV6 = 2100;
     private final static String TAG = PlaceholderFragment.class.getSimpleName();
-
     /**
      * The fragment argument representing the section number for this
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
-
     private AudioTrack mAudioTrack;
 
     private View mLayoutDiag;
@@ -120,12 +124,12 @@ public class PlaceholderFragment extends Fragment {
         int sampleRate = 44100;
         View rootView = null;
 
-        mSinWaveGenerator1 = new SinWaveGenerator(440, 1, sampleRate);
-        mSinWaveGenerator2 = new SinWaveGenerator(880, 1, sampleRate);
-        mSinWaveGenerator3 = new SinWaveGenerator(1600, 1, sampleRate);
-        mSinWaveGenerator4 = new SinWaveGenerator(1800, 1, sampleRate);
-        mSinWaveGenerator5 = new SinWaveGenerator(2000, 1, sampleRate);
-        mSinWaveGenerator6 = new SinWaveGenerator(2100, 1, sampleRate);
+        mSinWaveGenerator1 = new SinWaveGenerator(FREQ_LV1, 1, sampleRate);
+        mSinWaveGenerator2 = new SinWaveGenerator(FREQ_LV2, 1, sampleRate);
+        mSinWaveGenerator3 = new SinWaveGenerator(FREQ_LV3, 1, sampleRate);
+        mSinWaveGenerator4 = new SinWaveGenerator(FREQ_LV4, 1, sampleRate);
+        mSinWaveGenerator5 = new SinWaveGenerator(FREQ_LV5, 1, sampleRate);
+        mSinWaveGenerator6 = new SinWaveGenerator(FREQ_LV6, 1, sampleRate);
 
         switch (this.getArguments().getInt(ARG_SECTION_NUMBER)) {
             case 1:
@@ -330,22 +334,54 @@ public class PlaceholderFragment extends Fragment {
                 public void run() {
 
                     if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-                        mDiagMaxPoint++;
+                        int point = 1;
+                        double frequency = mCurrentWaveGenerator.getFrequency();
+                        if (frequency == FREQ_LV1) {
+                            point = 1;
+                        } else if (frequency == FREQ_LV1) {
+                            point = 2;
+                        } else if (frequency == FREQ_LV1) {
+                            point = 3;
+                        } else if (frequency == FREQ_LV1) {
+                            point = 4;
+                        } else if (frequency == FREQ_LV1) {
+                            point = 5;
+                        } else if (frequency == FREQ_LV1) {
+                            point = 6;
+                        }
+                        mDiagMaxPoint += point;
+
                     }
                     if (mBtnGotIt.isPressed()) {
                         if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-                            mDiagResultPoint++;
+
+                            int point = 1;
+                            double frequency = mCurrentWaveGenerator.getFrequency();
+                            if (frequency == FREQ_LV1) {
+                                point = 1;
+                            } else if (frequency == FREQ_LV1) {
+                                point = 2;
+                            } else if (frequency == FREQ_LV1) {
+                                point = 3;
+                            } else if (frequency == FREQ_LV1) {
+                                point = 4;
+                            } else if (frequency == FREQ_LV1) {
+                                point = 5;
+                            } else if (frequency == FREQ_LV1) {
+                                point = 6;
+                            }
+                            mDiagResultPoint += point;
                         } else if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_STOPPED) {
                             mDiagResultPoint--;
                         }
                     }
 
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            point.setText(String.valueOf(mDiagResultPoint) + "/" + String.valueOf(mDiagMaxPoint));
-                        }
-                    });
+//                    mHandler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            point.setText(String.valueOf(mDiagResultPoint) + "/" + String.valueOf(mDiagMaxPoint));
+//                        }
+//                    });
                 }
             }, 0, 500, TimeUnit.MILLISECONDS);
 
@@ -479,7 +515,7 @@ public class PlaceholderFragment extends Fragment {
 
                 // 休止秒数（ミリ秒）
                 try {
-                    int pauseTime = ((2 + random.nextInt(5)) * 1000);
+                    int pauseTime = ((2 + random.nextInt(3)) * 1000);
                     Thread.sleep(pauseTime);
                 } catch (InterruptedException e) {
                 }
@@ -492,7 +528,7 @@ public class PlaceholderFragment extends Fragment {
 
                 // 再生秒数（ミリ秒）
                 try {
-                    int playTime = ((2 + random.nextInt(5)) * 1000);
+                    int playTime = ((2 + random.nextInt(3)) * 1000);
                     Thread.sleep(playTime);
                 } catch (InterruptedException e) {
                 }
@@ -500,6 +536,12 @@ public class PlaceholderFragment extends Fragment {
 
             mAudioTrack.setStereoVolume(0, 0);
             mAudioTrack.stop();
+
+            // 採点
+            float f = (float) mDiagResultPoint / mDiagMaxPoint;
+            Log.d(TAG, String.valueOf(f));
+            // 63 〜 13歳まで、0.02ごとに加算
+            final int age = Math.round(63 - f * 50);
 
             // 結果表示
             mHandler.post(new Runnable() {
@@ -509,7 +551,7 @@ public class PlaceholderFragment extends Fragment {
                     mLayoutDiagResult.setVisibility(View.VISIBLE);
 
                     mLblAge.setVisibility(View.VISIBLE);
-                    mLblAge.setText(getString(R.string.diag_age, 45));
+                    mLblAge.setText(getString(R.string.diag_age, age));
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                         animateAlpha();
                     }
