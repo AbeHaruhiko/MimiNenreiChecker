@@ -1,73 +1,146 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:caliconography="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context="jp.caliconography.miminenreichecker.app.DiagnosisFragment">
 
-    <TextView
-        android:id="@+id/lbl_diag_desc"
+    <RelativeLayout
+        android:id="@+id/layout_diag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/lbl_diag_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_marginLeft="48dp"
+            android:layout_marginRight="48dp"
+            android:layout_marginTop="48dp"
+            android:text="@string/diag_description"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <view
+            android:id="@+id/btn_start_diag"
+            class="jp.caliconography.android.widget.CustomFontButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="false"
+            android:layout_below="@+id/lbl_diag_desc"
+            android:layout_margin="48dp"
+            android:background="@drawable/btn_common_back"
+            android:padding="@dimen/padding_level_button"
+            android:text="&#xf04b; START!"
+            android:textSize="24sp"
+            caliconography:customFont="fontawesome-webfont.ttf" />
+
+        <view
+            android:id="@+id/btn_got_it"
+            class="jp.caliconography.android.widget.CustomFontButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="false"
+            android:layout_below="@+id/lbl_diag_desc"
+            android:layout_margin="48dp"
+            android:background="@drawable/btn_common_back"
+            android:padding="@dimen/padding_level_button"
+            android:text="&#xf087; 鳴ってる！"
+            android:textSize="24sp"
+            android:visibility="gone"
+            caliconography:customFont="fontawesome-webfont.ttf" />
+
+        <view
+            android:id="@+id/btn_stop"
+            class="jp.caliconography.android.widget.CustomFontButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/lbl_diag_desc"
+            android:layout_alignRight="@+id/lbl_diag_desc"
+            android:layout_alignTop="@+id/lbl_diag_desc"
+            android:background="@drawable/btn_common_back"
+            android:padding="@dimen/padding_level_button"
+            android:text="&#xf04d; 中止"
+            android:textSize="24sp"
+            android:visibility="gone"
+            caliconography:customFont="fontawesome-webfont.ttf" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_stop"
+            android:layout_toRightOf="@+id/btn_stop"
+            android:text="Small Text"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_diag_result"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="center_horizontal|top"
-        android:layout_marginLeft="48dp"
-        android:layout_marginRight="48dp"
-        android:layout_marginTop="48dp"
-        android:text="@string/diag_description"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:visibility="invisible">
 
-    <view
-        android:id="@+id/btn_start_diag"
-        class="jp.caliconography.android.widget.CustomFontButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="false"
-        android:layout_below="@+id/lbl_diag_desc"
-        android:layout_margin="48dp"
-        android:background="@drawable/btn_common_back"
-        android:padding="@dimen/padding_level_button"
-        android:text="&#xf04b; START!"
-        android:textSize="24sp"
-        caliconography:customFont="fontawesome-webfont.ttf" />
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="36dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="あなたの耳年齢は..."
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <view
-        android:id="@+id/btn_got_it"
-        class="jp.caliconography.android.widget.CustomFontButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="false"
-        android:layout_below="@+id/lbl_diag_desc"
-        android:layout_margin="48dp"
-        android:background="@drawable/btn_common_back"
-        android:padding="@dimen/padding_level_button"
-        android:text="&#xf087; 鳴ってる！"
-        android:textSize="24sp"
-        android:visibility="gone"
-        caliconography:customFont="fontawesome-webfont.ttf" />
+        <TextView
+            android:id="@+id/lbl_diag_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView4"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal|top"
+            android:alpha="0"
+            android:text="@string/diag_age"
+            android:textColor="#00838f"
+            android:textSize="128sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
 
-    <view
-        android:id="@+id/btn_stop"
-        class="jp.caliconography.android.widget.CustomFontButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/lbl_diag_desc"
-        android:layout_alignRight="@+id/lbl_diag_desc"
-        android:layout_alignTop="@+id/lbl_diag_desc"
-        android:background="@drawable/btn_common_back"
-        android:padding="@dimen/padding_level_button"
-        android:text="&#xf04d; 中止"
-        android:textSize="24sp"
-        android:visibility="gone"
-        caliconography:customFont="fontawesome-webfont.ttf" />
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/lbl_diag_age"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_toRightOf="@+id/lbl_diag_age"
+            android:text="才"
+            android:textSize="24dp" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_stop"
-        android:layout_toRightOf="@+id/btn_stop"
-        android:text="Small Text"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        <TextView
+            android:id="@+id/lbl_diag_point"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lbl_diag_age"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal|top"
+            android:text="%1$d"
+            android:textSize="72dp"
+            android:visibility="gone" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/lbl_diag_point"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_toRightOf="@+id/lbl_diag_point"
+            android:text="点"
+            android:textSize="24dp"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+</FrameLayout>

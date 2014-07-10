@@ -1,28 +1,58 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:caliconography="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context="jp.caliconography.miminenreichecker.app.DiagnosisFragment">
 
     <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="36dp"
+        android:layout_marginTop="20dp"
+        android:text="あなたの耳年齢は..."
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/lbl_diag_age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal|top"
+        android:text="%1$d"
+        android:textSize="72dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/lbl_diag_age"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_toRightOf="@+id/lbl_diag_age"
+        android:text="才"
+        android:textSize="24dp" />
+
+    <TextView
         android:id="@+id/lbl_diag_point"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/lbl_diag_age"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal|top"
-        android:textSize="72dp"
         android:text="%1$d"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:textSize="72dp" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|top"
-        android:textSize="24dp"
-        android:text="点"
         android:layout_alignBottom="@+id/lbl_diag_point"
-        android:layout_toRightOf="@+id/lbl_diag_point" />
+        android:layout_gravity="center_horizontal|top"
+        android:layout_toRightOf="@+id/lbl_diag_point"
+        android:text="点"
+        android:textSize="24dp" />
 
 </RelativeLayout>

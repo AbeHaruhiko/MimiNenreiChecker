@@ -1,8 +1,11 @@
 package jp.caliconography.miminenreichecker.app;
 
+import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -16,6 +19,7 @@ import com.beardedhen.androidbootstrap.FontAwesome;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,17 +48,27 @@ public class PlaceholderFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
 
     private AudioTrack mAudioTrack;
+
+    private View mLayoutDiag;
+    private View mLayoutDiagResult;
+
+    private TextView mLblAge;
+
     private CustomFontButtonWithRightIcon mBtnLv1;
     private CustomFontButtonWithRightIcon mBtnLv2;
     private CustomFontButtonWithRightIcon mBtnLv3;
     private CustomFontButtonWithRightIcon mBtnLv4;
     private CustomFontButtonWithRightIcon mBtnLv5;
     private CustomFontButtonWithRightIcon mBtnLv6;
+
     private ArrayList<CustomFontButtonWithRightIcon> mButtonList = new ArrayList<CustomFontButtonWithRightIcon>();
+
     private Timer mForceStopTimer = new Timer();
     private ForceStopTimerTask mForceStopTimerTask;
-    private ForceStopDiagTimerTask mForceStopDiagTimerTask;
+//    private ForceStopDiagTimerTask mForceStopDiagTimerTask;
+
     private Handler mHandler = new Handler();
+
     private SinWaveGenerator mCurrentWaveGenerator;
     private SinWaveGenerator mSinWaveGenerator1;
     private SinWaveGenerator mSinWaveGenerator2;
@@ -62,9 +76,13 @@ public class PlaceholderFragment extends Fragment {
     private SinWaveGenerator mSinWaveGenerator4;
     private SinWaveGenerator mSinWaveGenerator5;
     private SinWaveGenerator mSinWaveGenerator6;
+
     private HashMap<View, SinWaveGenerator> mBtnGenMap = new HashMap<View, SinWaveGenerator>();
+
     private short[] mSoundBuffer;
+
     private Map<String, String> mFaMap = FontAwesome.getFaMap();
+
     private RunnnableForUpdateRightIcon mRunnableForUpdateRightIcon;
     private RunnnableForRandomPlay mRunnnableForRandomPlay;
 
@@ -152,11 +170,16 @@ public class PlaceholderFragment extends Fragment {
             case 2:
                 rootView = inflater.inflate(R.layout.fragment_diagnosis, container, false);
 
+                mLayoutDiag = rootView.findViewById((R.id.layout_diag));
+                mLayoutDiagResult = rootView.findViewById((R.id.layout_diag_result));
+
                 mLblDiagDesc = (TextView) rootView.findViewById(R.id.lbl_diag_desc);
                 mBtnStartDiag = (CustomFontButton) rootView.findViewById(R.id.btn_start_diag);
                 mBtnStopDiag = (CustomFontButton) rootView.findViewById(R.id.btn_stop);
                 mBtnGotIt = (CustomFontButton) rootView.findViewById(R.id.btn_got_it);
                 point = (TextView) rootView.findViewById(R.id.textView2);
+
+                mLblAge = (TextView) rootView.findViewById(R.id.lbl_diag_age);
 
                 View.OnClickListener onStartDiagBtnClickListener = new View.OnClickListener() {
 
@@ -177,8 +200,8 @@ public class PlaceholderFragment extends Fragment {
                         mBtnStopDiag.setVisibility(View.INVISIBLE);
                         mBtnGotIt.setVisibility(View.INVISIBLE);
 
-                        if (mRunnnableForRandomPlay != null)
-                            mRunnnableForRandomPlay.running = false;
+//                        if (mRunnnableForRandomPlay != null)
+//                            mRunnnableForRandomPlay.running = false;
                         if (mScheduledFuture != null) mScheduledFuture.cancel(true);
                         if (mScheduledExecutor != null) mScheduledExecutor.shutdown();
 
@@ -187,6 +210,9 @@ public class PlaceholderFragment extends Fragment {
                 });
 
                 break;
+            case 3:
+                rootView = inflater.inflate(R.layout.fragment_diagnosis_result, container, false);
+                return rootView;
         }
 
         //バッファーサイズの取得
@@ -327,10 +353,10 @@ public class PlaceholderFragment extends Fragment {
 //            new Thread(mRunnnableForRandomPlay).start();
             mScheduledFuture = mScheduledExecutor.schedule(mRunnnableForRandomPlay, 0, TimeUnit.MILLISECONDS);
 
-            if (mForceStopDiagTimerTask != null) mForceStopDiagTimerTask.cancel();
-            mForceStopDiagTimerTask = new ForceStopDiagTimerTask();
+//            if (mForceStopDiagTimerTask != null) mForceStopDiagTimerTask.cancel();
+//            mForceStopDiagTimerTask = new ForceStopDiagTimerTask();
 //                mForceStopTimer.schedule(mForceStopTimerTask, 10000);
-            mHandler.postDelayed(mForceStopDiagTimerTask, 30000);
+//            mHandler.postDelayed(mForceStopDiagTimerTask, 30000);
         }
     }
 
@@ -422,22 +448,28 @@ public class PlaceholderFragment extends Fragment {
         }
     }
 
+/*
     class ForceStopDiagTimerTask extends TimerTask {
         @Override
         public void run() {
             mBtnStopDiag.performClick();
         }
     }
+*/
 
     class RunnnableForRandomPlay implements Runnable {
 
-        protected boolean running = true;
+//        protected boolean running = true;
 
         @Override
         public void run() {
             Random random = new Random();
+
+            // リストをシャッフルする
             List<SinWaveGenerator> waveGenList = Arrays.asList(mSinWaveGenerator1, mSinWaveGenerator2, mSinWaveGenerator3, mSinWaveGenerator4, mSinWaveGenerator5, mSinWaveGenerator6);
-            while (running) {
+            Collections.shuffle(waveGenList);
+
+            for (int i = 0; i < waveGenList.size(); i++) {
 
                 // TODO ScheduledExecutor使ったほうがスマートか。
 
@@ -453,7 +485,6 @@ public class PlaceholderFragment extends Fragment {
                 }
 
                 // 周波数を決定
-                int i = random.nextInt(5);
                 mCurrentWaveGenerator = waveGenList.get(i);
                 mAudioTrack.play();
                 writeSound();
@@ -469,6 +500,34 @@ public class PlaceholderFragment extends Fragment {
 
             mAudioTrack.setStereoVolume(0, 0);
             mAudioTrack.stop();
+
+            // 結果表示
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mLayoutDiag.setVisibility(View.INVISIBLE);
+                    mLayoutDiagResult.setVisibility(View.VISIBLE);
+
+                    mLblAge.setVisibility(View.VISIBLE);
+                    mLblAge.setText(getString(R.string.diag_age, 45));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                        animateAlpha();
+                    }
+                }
+
+
+                @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+                private void animateAlpha() {
+                    // alphaプロパティを0fから1fに変化させます
+                    ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mLblAge, "alpha", 0f, 1f);
+
+                    // 3秒かけて実行させます
+                    objectAnimator.setDuration(3000);
+
+                    // アニメーションを開始します
+                    objectAnimator.start();
+                }
+            });
         }
     }
 }
