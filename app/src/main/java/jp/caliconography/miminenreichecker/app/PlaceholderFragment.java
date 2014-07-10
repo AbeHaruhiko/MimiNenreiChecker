@@ -522,7 +522,7 @@ public class PlaceholderFragment extends Fragment {
                     ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mLblAge, "alpha", 0f, 1f);
 
                     // 3秒かけて実行させます
-                    objectAnimator.setDuration(3000);
+                    objectAnimator.setDuration(5000);
 
                     // アニメーションを開始します
                     objectAnimator.start();

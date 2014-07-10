@@ -104,7 +104,7 @@
             android:layout_gravity="center_horizontal|top"
             android:alpha="0"
             android:text="@string/diag_age"
-            android:textColor="#00838f"
+            android:textColor="#00acc1"
             android:textSize="128sp"
             android:textStyle="bold"
             android:visibility="invisible" />
