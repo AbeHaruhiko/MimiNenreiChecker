@@ -47,12 +47,12 @@ public class PlaceholderFragment extends Fragment {
     public static final int FREQ_LV4 = 1800;
     public static final int FREQ_LV5 = 2000;
     public static final int FREQ_LV6 = 2100;
-    private final static String TAG = PlaceholderFragment.class.getSimpleName();
     /**
      * The fragment argument representing the section number for this
      * fragment.
      */
-    private static final String ARG_SECTION_NUMBER = "section_number";
+    static final String ARG_SECTION_NUMBER = "section_number";
+    private final static String TAG = PlaceholderFragment.class.getSimpleName();
     private AudioTrack mAudioTrack;
 
     private View mLayoutDiag;
@@ -199,22 +199,7 @@ public class PlaceholderFragment extends Fragment {
                 mBtnStopDiag.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mAudioTrack.setStereoVolume(0, 0);
-                        mAudioTrack.stop();
-
-                        mLayoutDiag.setVisibility(View.VISIBLE);
-                        mLayoutDiagResult.setVisibility(View.INVISIBLE);
-
-                        mLblDiagDesc.setVisibility(View.VISIBLE);
-                        mBtnStartDiag.setVisibility(View.VISIBLE);
-                        mBtnStopDiag.setVisibility(View.INVISIBLE);
-                        mBtnGotIt.setVisibility(View.INVISIBLE);
-
-//                        if (mRunnnableForRandomPlay != null)
-//                            mRunnnableForRandomPlay.running = false;
-                        if (mScheduledFuture != null) mScheduledFuture.cancel(true);
-                        if (mScheduledExecutor != null) mScheduledExecutor.shutdown();
-
+                        clearFragment();
                     }
                 });
 
@@ -226,48 +211,46 @@ public class PlaceholderFragment extends Fragment {
                 });
 
                 break;
-            case 3:
-                rootView = inflater.inflate(R.layout.fragment_diagnosis_result, container, false);
-                return rootView;
         }
 
-        if (this.getArguments().getInt(ARG_SECTION_NUMBER) != 3) {
+        //バッファーサイズの取得
+        int soundBufferSize = AudioTrack.getMinBufferSize(
+                sampleRate,
+                AudioFormat.CHANNEL_OUT_MONO,
+                AudioFormat.ENCODING_PCM_16BIT);
+        //AudioTrackの初期化
+        mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
+                //サンプリング定数
+                sampleRate,
+                //モノラル
+                AudioFormat.CHANNEL_OUT_MONO,
+                //16bit
+                AudioFormat.ENCODING_PCM_16BIT,
+                //バッファーサイズ
+                soundBufferSize,
+                //ストリームモード
+                AudioTrack.MODE_STREAM);
 
-            //バッファーサイズの取得
-            int soundBufferSize = AudioTrack.getMinBufferSize(
-                    sampleRate,
-                    AudioFormat.CHANNEL_OUT_MONO,
-                    AudioFormat.ENCODING_PCM_16BIT);
-            //AudioTrackの初期化
-            mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
-                    //サンプリング定数
-                    sampleRate,
-                    //モノラル
-                    AudioFormat.CHANNEL_OUT_MONO,
-                    //16bit
-                    AudioFormat.ENCODING_PCM_16BIT,
-                    //バッファーサイズ
-                    soundBufferSize,
-                    //ストリームモード
-                    AudioTrack.MODE_STREAM);
+        mSoundBuffer = new short[soundBufferSize];
+        Log.d("", String.valueOf(soundBufferSize));
+        //所得したバッファーサイズごとに通知させる。
+        mAudioTrack.setPositionNotificationPeriod(soundBufferSize);
+        mAudioTrack.setPlaybackPositionUpdateListener(
+                new AudioTrack.OnPlaybackPositionUpdateListener() {
+                    public void onMarkerReached(AudioTrack track) {
+                    }
 
-            mSoundBuffer = new short[soundBufferSize];
-            Log.d("", String.valueOf(soundBufferSize));
-            //所得したバッファーサイズごとに通知させる。
-            mAudioTrack.setPositionNotificationPeriod(soundBufferSize);
-            mAudioTrack.setPlaybackPositionUpdateListener(
-                    new AudioTrack.OnPlaybackPositionUpdateListener() {
-                        public void onMarkerReached(AudioTrack track) {
-                        }
-
-                        //通知があるごとに実行される。
-                        public void onPeriodicNotification(AudioTrack track) {
+                    //通知があるごとに実行される。
+                    public void onPeriodicNotification(AudioTrack track) {
 //                            Log.d(TAG, "notified");
+                        if (Thread.interrupted()) {
+                            Thread.currentThread().interrupt();
+                        } else {
                             writeSound();
                         }
                     }
-            );
-        }
+                }
+        );
 
         // 広告
         LinearLayout ad_container = (LinearLayout) rootView.findViewById(R.id.ad_container);
@@ -279,6 +262,33 @@ public class PlaceholderFragment extends Fragment {
         ad_container.addView(adg);
 
         return rootView;
+    }
+
+    void clearFragment() {
+        mAudioTrack.setStereoVolume(0, 0);
+        mAudioTrack.stop();
+
+        if (mScheduledFuture != null) mScheduledFuture.cancel(true);
+        if (mScheduledExecutor != null) mScheduledExecutor.shutdown();
+
+
+        if (getArguments().getInt(PlaceholderFragment.ARG_SECTION_NUMBER) == 1) {
+
+            if (mRunnableForUpdateRightIcon != null) mRunnableForUpdateRightIcon.running = false;
+
+        } else if (getArguments().getInt(PlaceholderFragment.ARG_SECTION_NUMBER) == 2) {
+
+            mLayoutDiag.setVisibility(View.VISIBLE);
+            mLayoutDiagResult.setVisibility(View.INVISIBLE);
+
+            mLblDiagDesc.setVisibility(View.VISIBLE);
+            mBtnStartDiag.setVisibility(View.VISIBLE);
+            mBtnStopDiag.setVisibility(View.INVISIBLE);
+            mBtnGotIt.setVisibility(View.INVISIBLE);
+
+            mDiagResultPoint = -1;
+            mDiagMaxPoint = -1;
+        }
     }
 
     private void doOnLvBtnClick(final View view) {
@@ -429,6 +439,8 @@ public class PlaceholderFragment extends Fragment {
             mAudioTrack.stop();
             mAudioTrack.release();
         }
+
+        clearFragment();
     }
 
     @Override
@@ -440,6 +452,8 @@ public class PlaceholderFragment extends Fragment {
             mAudioTrack.stop();
             mAudioTrack.release();
         }
+
+        clearFragment();
     }
 
     void writeSound() {
@@ -535,71 +549,99 @@ public class PlaceholderFragment extends Fragment {
             List<SinWaveGenerator> waveGenList = Arrays.asList(mSinWaveGenerator1, mSinWaveGenerator2, mSinWaveGenerator3, mSinWaveGenerator4, mSinWaveGenerator5, mSinWaveGenerator6);
             Collections.shuffle(waveGenList);
 
-            for (int i = 0; i < waveGenList.size(); i++) {
+            try {
+                for (int i = 0; i < waveGenList.size(); i++) {
 
-                // TODO ScheduledExecutor使ったほうがスマートか。
+                    // TODO ScheduledExecutor使ったほうがスマートか。
 
-                // 停止
-                mAudioTrack.setStereoVolume(0, 0);
-                mAudioTrack.stop();
+                    if (Thread.interrupted()) {
+                        throw new InterruptedException();
+                    }
 
-                // 休止秒数（ミリ秒）
-                try {
-                    int pauseTime = ((2 + random.nextInt(3)) * 1000);
-                    Thread.sleep(pauseTime);
-                } catch (InterruptedException e) {
-                }
+                    // 停止
+                    mAudioTrack.setStereoVolume(0, 0);
+                    mAudioTrack.stop();
 
-                // 周波数を決定
-                mCurrentWaveGenerator = waveGenList.get(i);
-                mAudioTrack.play();
-                writeSound();
-                mAudioTrack.setStereoVolume(1, 1);
+                    if (Thread.interrupted()) {
+                        throw new InterruptedException();
+                    }
 
-                // 再生秒数（ミリ秒）
-                try {
-                    int playTime = ((2 + random.nextInt(3)) * 1000);
-                    Thread.sleep(playTime);
-                } catch (InterruptedException e) {
-                }
-            }
+                    // 休止秒数（ミリ秒）
+                    try {
+                        int pauseTime = ((2 + random.nextInt(3)) * 1000);
+                        Thread.sleep(pauseTime);
+                    } catch (InterruptedException e) {
+                        throw new InterruptedException();
+                    }
 
-            mAudioTrack.setStereoVolume(0, 0);
-            mAudioTrack.stop();
+                    if (Thread.interrupted()) {
+                        throw new InterruptedException();
+                    }
 
-            // 採点
-            float f = (float) mDiagResultPoint / mDiagMaxPoint;
-            Log.d(TAG, String.valueOf(f));
-            // 63 〜 13歳まで、0.02ごとに加算
-            final int age = Math.round(63 - f * 50);
+                    // 周波数を決定
+                    mCurrentWaveGenerator = waveGenList.get(i);
+                    mAudioTrack.play();
+                    writeSound();
+                    mAudioTrack.setStereoVolume(1, 1);
 
-            // 結果表示
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mLayoutDiag.setVisibility(View.INVISIBLE);
-                    mLayoutDiagResult.setVisibility(View.VISIBLE);
+                    if (Thread.interrupted()) {
+                        throw new InterruptedException();
+                    }
 
-                    mLblAge.setVisibility(View.VISIBLE);
-                    mLblAge.setText(getString(R.string.diag_age, age));
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                        animateAlpha();
+                    // 再生秒数（ミリ秒）
+                    try {
+                        int playTime = ((2 + random.nextInt(3)) * 1000);
+                        Thread.sleep(playTime);
+                    } catch (InterruptedException e) {
+                        throw new InterruptedException();
+                    }
+
+                    if (Thread.interrupted()) {
+                        throw new InterruptedException();
                     }
                 }
 
+                mAudioTrack.setStereoVolume(0, 0);
+                mAudioTrack.stop();
 
-                @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-                private void animateAlpha() {
-                    // alphaプロパティを0fから1fに変化させます
-                    ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mLblAge, "alpha", 0f, 1f);
+                // 採点
+                float f = (float) mDiagResultPoint / mDiagMaxPoint;
+                Log.d(TAG, String.valueOf(f));
+                // 63 〜 13歳まで、0.02ごとに加算
+                final int age = Math.round(63 - f * 50);
 
-                    // 3秒かけて実行させます
-                    objectAnimator.setDuration(5000);
+                // 結果表示
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mLayoutDiag.setVisibility(View.INVISIBLE);
+                        mLayoutDiagResult.setVisibility(View.VISIBLE);
 
-                    // アニメーションを開始します
-                    objectAnimator.start();
-                }
-            });
+                        mLblAge.setVisibility(View.VISIBLE);
+                        mLblAge.setText(getString(R.string.diag_age, age));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                            animateAlpha();
+                        }
+                    }
+
+
+                    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+                    private void animateAlpha() {
+                        // alphaプロパティを0fから1fに変化させます
+                        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mLblAge, "alpha", 0f, 1f);
+
+                        // 3秒かけて実行させます
+                        objectAnimator.setDuration(5000);
+
+                        // アニメーションを開始します
+                        objectAnimator.start();
+                    }
+                });
+
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+
         }
     }
 }
