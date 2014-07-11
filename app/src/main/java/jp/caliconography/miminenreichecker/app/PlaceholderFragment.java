@@ -420,6 +420,12 @@ public class PlaceholderFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+
+        // 再生中だったら停止してリリース
+        if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+            mAudioTrack.stop();
+            mAudioTrack.release();
+        }
     }
 
     void writeSound() {
