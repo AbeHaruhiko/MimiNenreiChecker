@@ -53,28 +53,22 @@ public class PlaceholderFragment extends Fragment {
      */
     static final String ARG_SECTION_NUMBER = "section_number";
     private final static String TAG = PlaceholderFragment.class.getSimpleName();
+    ADG mAdg;
     private AudioTrack mAudioTrack;
-
     private View mLayoutDiag;
     private View mLayoutDiagResult;
-
     private TextView mLblAge;
-
     private CustomFontButtonWithRightIcon mBtnLv1;
     private CustomFontButtonWithRightIcon mBtnLv2;
     private CustomFontButtonWithRightIcon mBtnLv3;
     private CustomFontButtonWithRightIcon mBtnLv4;
     private CustomFontButtonWithRightIcon mBtnLv5;
     private CustomFontButtonWithRightIcon mBtnLv6;
-
     private ArrayList<CustomFontButtonWithRightIcon> mButtonList = new ArrayList<CustomFontButtonWithRightIcon>();
-
     private Timer mForceStopTimer = new Timer();
-    private ForceStopTimerTask mForceStopTimerTask;
 //    private ForceStopDiagTimerTask mForceStopDiagTimerTask;
-
+private ForceStopTimerTask mForceStopTimerTask;
     private Handler mHandler = new Handler();
-
     private SinWaveGenerator mCurrentWaveGenerator;
     private SinWaveGenerator mSinWaveGenerator1;
     private SinWaveGenerator mSinWaveGenerator2;
@@ -82,24 +76,18 @@ public class PlaceholderFragment extends Fragment {
     private SinWaveGenerator mSinWaveGenerator4;
     private SinWaveGenerator mSinWaveGenerator5;
     private SinWaveGenerator mSinWaveGenerator6;
-
     private HashMap<View, SinWaveGenerator> mBtnGenMap = new HashMap<View, SinWaveGenerator>();
-
     private short[] mSoundBuffer;
-
     private Map<String, String> mFaMap = FontAwesome.getFaMap();
-
     private RunnnableForUpdateRightIcon mRunnableForUpdateRightIcon;
     private RunnnableForRandomPlay mRunnnableForRandomPlay;
     private ScheduledFuture<?> mScheduledFuture;
     private ScheduledExecutorService mScheduledExecutor;
-
     private TextView mLblDiagDesc;
     private CustomFontButton mBtnStartDiag;
     private CustomFontButton mBtnStopDiag;
     private CustomFontButton mBtnGotIt;
     private CustomFontButton mBtnBackToDiagTop;
-
     private int mDiagResultPoint;
     private int mDiagMaxPoint;
 
@@ -254,12 +242,11 @@ public class PlaceholderFragment extends Fragment {
 
         // 広告
         LinearLayout ad_container = (LinearLayout) rootView.findViewById(R.id.ad_container);
-        ADG adg;
-        adg = new ADG(this.getActivity().getApplicationContext());
-        adg.setLocationId("14996");
-        adg.setAdFrameSize(ADG.AdFrameSize.SP);
-        adg.setAdListener(new AdListener());
-        ad_container.addView(adg);
+        mAdg = new ADG(this.getActivity().getApplicationContext());
+        mAdg.setLocationId("14996");
+        mAdg.setAdFrameSize(ADG.AdFrameSize.SP);
+        mAdg.setAdListener(new AdListener());
+        ad_container.addView(mAdg);
 
         return rootView;
     }
