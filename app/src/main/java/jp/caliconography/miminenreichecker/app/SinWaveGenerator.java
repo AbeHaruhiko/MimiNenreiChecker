@@ -14,7 +14,7 @@ class SinWaveGenerator {
 
     public double generateSinWave() {
         mPhase += mFrequency / mSamplerate;
-        mPhase = (mPhase > 1) ? 0 : mPhase;
+//        mPhase = (mPhase > 1) ? 0 : mPhase;
         return Math.sin(2 * Math.PI * mPhase) * mAmp;
     }
 

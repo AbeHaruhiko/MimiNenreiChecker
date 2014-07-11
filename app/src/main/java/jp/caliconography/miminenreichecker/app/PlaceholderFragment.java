@@ -41,12 +41,12 @@ import jp.caliconography.android.widget.CustomFontButtonWithRightIcon;
  * A placeholder fragment containing a simple view.
  */
 public class PlaceholderFragment extends Fragment {
-    public static final int FREQ_LV1 = 440;
-    public static final int FREQ_LV2 = 880;
-    public static final int FREQ_LV3 = 1600;
-    public static final int FREQ_LV4 = 1800;
-    public static final int FREQ_LV5 = 2000;
-    public static final int FREQ_LV6 = 2100;
+    public static final int FREQ_LV1 = 13000;
+    public static final int FREQ_LV2 = 15000;
+    public static final int FREQ_LV3 = 16000;
+    public static final int FREQ_LV4 = 18000;
+    public static final int FREQ_LV5 = 20000;
+    public static final int FREQ_LV6 = 21000;
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -355,43 +355,44 @@ private ForceStopTimerTask mForceStopTimerTask;
                 public void run() {
 
                     if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-                        int point = 1;
-                        double frequency = mCurrentWaveGenerator.getFrequency();
-                        if (frequency == FREQ_LV1) {
-                            point = 1;
-                        } else if (frequency == FREQ_LV1) {
-                            point = 2;
-                        } else if (frequency == FREQ_LV1) {
-                            point = 3;
-                        } else if (frequency == FREQ_LV1) {
-                            point = 4;
-                        } else if (frequency == FREQ_LV1) {
-                            point = 5;
-                        } else if (frequency == FREQ_LV1) {
-                            point = 6;
-                        }
-                        mDiagMaxPoint += point;
-
+//                        int point = 1;
+//                        double frequency = mCurrentWaveGenerator.getFrequency();
+//                        if (frequency == FREQ_LV1) {
+//                            point = 1;
+//                        } else if (frequency == FREQ_LV1) {
+//                            point = 2;
+//                        } else if (frequency == FREQ_LV1) {
+//                            point = 3;
+//                        } else if (frequency == FREQ_LV1) {
+//                            point = 4;
+//                        } else if (frequency == FREQ_LV1) {
+//                            point = 5;
+//                        } else if (frequency == FREQ_LV1) {
+//                            point = 6;
+//                        }
+//                        mDiagMaxPoint += point;
+                        mDiagMaxPoint++;
                     }
                     if (mBtnGotIt.isPressed()) {
                         if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
 
-                            int point = 1;
-                            double frequency = mCurrentWaveGenerator.getFrequency();
-                            if (frequency == FREQ_LV1) {
-                                point = 1;
-                            } else if (frequency == FREQ_LV1) {
-                                point = 2;
-                            } else if (frequency == FREQ_LV1) {
-                                point = 3;
-                            } else if (frequency == FREQ_LV1) {
-                                point = 4;
-                            } else if (frequency == FREQ_LV1) {
-                                point = 5;
-                            } else if (frequency == FREQ_LV1) {
-                                point = 6;
-                            }
-                            mDiagResultPoint += point;
+//                            int point = 1;
+//                            double frequency = mCurrentWaveGenerator.getFrequency();
+//                            if (frequency == FREQ_LV1) {
+//                                point = 1;
+//                            } else if (frequency == FREQ_LV1) {
+//                                point = 2;
+//                            } else if (frequency == FREQ_LV1) {
+//                                point = 3;
+//                            } else if (frequency == FREQ_LV1) {
+//                                point = 4;
+//                            } else if (frequency == FREQ_LV1) {
+//                                point = 5;
+//                            } else if (frequency == FREQ_LV1) {
+//                                point = 6;
+//                            }
+//                            mDiagResultPoint += point;
+                            mDiagResultPoint++;
                         } else if (mAudioTrack.getPlayState() == AudioTrack.PLAYSTATE_STOPPED) {
                             mDiagResultPoint--;
                         }
@@ -555,7 +556,7 @@ private ForceStopTimerTask mForceStopTimerTask;
 
                     // 休止秒数（ミリ秒）
                     try {
-                        int pauseTime = ((2 + random.nextInt(3)) * 1000);
+                        int pauseTime = ((1 + random.nextInt(3)) * 1000);
                         Thread.sleep(pauseTime);
                     } catch (InterruptedException e) {
                         throw new InterruptedException();
