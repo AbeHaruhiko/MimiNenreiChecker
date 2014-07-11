@@ -89,15 +89,16 @@ public class PlaceholderFragment extends Fragment {
 
     private RunnnableForUpdateRightIcon mRunnableForUpdateRightIcon;
     private RunnnableForRandomPlay mRunnnableForRandomPlay;
+    private ScheduledFuture<?> mScheduledFuture;
+    private ScheduledExecutorService mScheduledExecutor;
 
     private TextView mLblDiagDesc;
     private CustomFontButton mBtnStartDiag;
     private CustomFontButton mBtnStopDiag;
     private CustomFontButton mBtnGotIt;
-    private ScheduledFuture<?> mScheduledFuture;
-    private ScheduledExecutorService mScheduledExecutor;
+    private CustomFontButton mBtnBackToDiagTop;
+
     private int mDiagResultPoint;
-    private TextView point;
     private int mDiagMaxPoint;
 
     public PlaceholderFragment() {
@@ -181,23 +182,26 @@ public class PlaceholderFragment extends Fragment {
                 mBtnStartDiag = (CustomFontButton) rootView.findViewById(R.id.btn_start_diag);
                 mBtnStopDiag = (CustomFontButton) rootView.findViewById(R.id.btn_stop);
                 mBtnGotIt = (CustomFontButton) rootView.findViewById(R.id.btn_got_it);
-                point = (TextView) rootView.findViewById(R.id.textView2);
+                mBtnBackToDiagTop = (CustomFontButton) rootView.findViewById(R.id.btn_back_to_diag_top);
 
                 mLblAge = (TextView) rootView.findViewById(R.id.lbl_diag_age);
 
-                View.OnClickListener onStartDiagBtnClickListener = new View.OnClickListener() {
+                mBtnStartDiag.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View view) {
                         doOnDiagBtnClick(view);
                     }
-                };
-                mBtnStartDiag.setOnClickListener(onStartDiagBtnClickListener);
+                });
+
                 mBtnStopDiag.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         mAudioTrack.setStereoVolume(0, 0);
                         mAudioTrack.stop();
+
+                        mLayoutDiag.setVisibility(View.VISIBLE);
+                        mLayoutDiagResult.setVisibility(View.INVISIBLE);
 
                         mLblDiagDesc.setVisibility(View.VISIBLE);
                         mBtnStartDiag.setVisibility(View.VISIBLE);
@@ -209,7 +213,13 @@ public class PlaceholderFragment extends Fragment {
                         if (mScheduledFuture != null) mScheduledFuture.cancel(true);
                         if (mScheduledExecutor != null) mScheduledExecutor.shutdown();
 
-                        point.setText(String.valueOf(mDiagResultPoint));
+                    }
+                });
+
+                mBtnBackToDiagTop.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mBtnStopDiag.performClick();
                     }
                 });
 

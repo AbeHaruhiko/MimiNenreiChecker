@@ -8,9 +8,10 @@
     <RelativeLayout
         android:id="@+id/layout_diag"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="visible">
 
-        <TextView
+    <TextView
             android:id="@+id/lbl_diag_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -131,6 +132,21 @@
             android:text="点"
             android:textSize="24dp"
             android:visibility="gone" />
+
+        <view
+            android:id="@+id/btn_back_to_diag_top"
+            class="jp.caliconography.android.widget.CustomFontButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/lbl_diag_age"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="80dp"
+            android:background="@drawable/btn_common_back"
+            android:padding="@dimen/padding_level_button"
+            android:text="&#xf060; チャレンジモードTOPへ"
+            android:textSize="24sp"
+            android:visibility="visible"
+            caliconography:customFont="fontawesome-webfont.ttf" />
 
     </RelativeLayout>
 
