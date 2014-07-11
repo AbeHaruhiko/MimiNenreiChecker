@@ -15,3 +15,6 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keepclasseswithmembers class com.socdm.d.adgeneration.** { *; }
+-keepclasseswithmembers class com.mediba.jp.** { *; }

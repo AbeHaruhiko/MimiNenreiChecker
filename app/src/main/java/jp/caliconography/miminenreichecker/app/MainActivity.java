@@ -116,6 +116,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
         return mViewPager;
     }
+
     /**
      * A {@link android.support.v4.app.FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.

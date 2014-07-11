@@ -13,9 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.FontAwesome;
+import com.socdm.d.adgeneration.ADG;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -229,40 +231,52 @@ public class PlaceholderFragment extends Fragment {
                 return rootView;
         }
 
-        //バッファーサイズの取得
-        int soundBufferSize = AudioTrack.getMinBufferSize(
-                sampleRate,
-                AudioFormat.CHANNEL_OUT_MONO,
-                AudioFormat.ENCODING_PCM_16BIT);
-        //AudioTrackの初期化
-        mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
-                //サンプリング定数
-                sampleRate,
-                //モノラル
-                AudioFormat.CHANNEL_OUT_MONO,
-                //16bit
-                AudioFormat.ENCODING_PCM_16BIT,
-                //バッファーサイズ
-                soundBufferSize,
-                //ストリームモード
-                AudioTrack.MODE_STREAM);
+        if (this.getArguments().getInt(ARG_SECTION_NUMBER) != 3) {
 
-        mSoundBuffer = new short[soundBufferSize];
-        Log.d("", String.valueOf(soundBufferSize));
-        //所得したバッファーサイズごとに通知させる。
-        mAudioTrack.setPositionNotificationPeriod(soundBufferSize);
-        mAudioTrack.setPlaybackPositionUpdateListener(
-                new AudioTrack.OnPlaybackPositionUpdateListener() {
-                    public void onMarkerReached(AudioTrack track) {
-                    }
+            //バッファーサイズの取得
+            int soundBufferSize = AudioTrack.getMinBufferSize(
+                    sampleRate,
+                    AudioFormat.CHANNEL_OUT_MONO,
+                    AudioFormat.ENCODING_PCM_16BIT);
+            //AudioTrackの初期化
+            mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
+                    //サンプリング定数
+                    sampleRate,
+                    //モノラル
+                    AudioFormat.CHANNEL_OUT_MONO,
+                    //16bit
+                    AudioFormat.ENCODING_PCM_16BIT,
+                    //バッファーサイズ
+                    soundBufferSize,
+                    //ストリームモード
+                    AudioTrack.MODE_STREAM);
 
-                    //通知があるごとに実行される。
-                    public void onPeriodicNotification(AudioTrack track) {
+            mSoundBuffer = new short[soundBufferSize];
+            Log.d("", String.valueOf(soundBufferSize));
+            //所得したバッファーサイズごとに通知させる。
+            mAudioTrack.setPositionNotificationPeriod(soundBufferSize);
+            mAudioTrack.setPlaybackPositionUpdateListener(
+                    new AudioTrack.OnPlaybackPositionUpdateListener() {
+                        public void onMarkerReached(AudioTrack track) {
+                        }
+
+                        //通知があるごとに実行される。
+                        public void onPeriodicNotification(AudioTrack track) {
 //                            Log.d(TAG, "notified");
-                        writeSound();
+                            writeSound();
+                        }
                     }
-                }
-        );
+            );
+        }
+
+        // 広告
+        LinearLayout ad_container = (LinearLayout) rootView.findViewById(R.id.ad_container);
+        ADG adg;
+        adg = new ADG(this.getActivity().getApplicationContext());
+        adg.setLocationId("14996");
+        adg.setAdFrameSize(ADG.AdFrameSize.SP);
+        adg.setAdListener(new AdListener());
+        ad_container.addView(adg);
 
         return rootView;
     }
