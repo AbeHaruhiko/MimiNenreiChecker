@@ -327,6 +327,7 @@ private ForceStopTimerTask mForceStopTimerTask;
                 mAudioTrack.stop();
 
                 for (CustomFontButtonWithRightIcon item : mButtonList) {
+                    item.setEnabled(true);
                     item.setRightIcon(mFaMap.get("fa-play"));
                 }
 
