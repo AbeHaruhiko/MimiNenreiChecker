@@ -8,5 +8,6 @@
     <string name="action_settings">Settings</string>
     <string name="diag_description">約30秒間ランダムにいろいろなレベルの音が再生されます。\n\n音が聴こえている間「聴こえた！」ボタンを押しっぱなしにして、音が止まったら離しましょう！\n\n実際の音とボタンを押しているタイミングが一致しているほど、耳年齢が若く判定されます。\n\n\nでは「スタート」ボタンで診断を開始しましょう！</string>
     <string name="diag_age">%1$d</string>
+    <string name="diag_info">音量の上げすぎに注意しましょう。\n安全のため再生開始から約10秒後に自動的に停止します。</string>
 
 </resources>
