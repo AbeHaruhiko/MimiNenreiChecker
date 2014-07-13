@@ -91,6 +91,8 @@ private ForceStopTimerTask mForceStopTimerTask;
     private int mDiagResultPoint;
     private int mDiagMaxPoint;
 
+    private TextView mDebug;
+
     public PlaceholderFragment() {
         /**
          * ここには何も書かない（書いてはいけない）
@@ -165,6 +167,8 @@ private ForceStopTimerTask mForceStopTimerTask;
             case 2:
                 rootView = inflater.inflate(R.layout.fragment_diagnosis, container, false);
 
+                mDebug = (TextView) rootView.findViewById(R.id.textView2);
+
                 mLayoutDiag = rootView.findViewById((R.id.layout_diag));
                 mLayoutDiagResult = rootView.findViewById((R.id.layout_diag_result));
 
@@ -180,7 +184,7 @@ private ForceStopTimerTask mForceStopTimerTask;
 
                     @Override
                     public void onClick(View view) {
-                        doOnDiagBtnClick(view);
+                        doOnDiagStartBtnClick(view);
                     }
                 });
 
@@ -312,6 +316,7 @@ private ForceStopTimerTask mForceStopTimerTask;
                     if (item == clickedButton) {
 //                            item.setText(item.getText().toString().replace(FontAwesome.getFaMap().get("fa-play"), FontAwesome.getFaMap().get("fa-pause")));
                     } else {
+                        item.setEnabled(false);
                         item.setRightIcon(mFaMap.get("fa-play"));
                     }
                 }
@@ -335,7 +340,7 @@ private ForceStopTimerTask mForceStopTimerTask;
         }
     }
 
-    private void doOnDiagBtnClick(final View view) {
+    private void doOnDiagStartBtnClick(final View view) {
 
         if (mAudioTrack != null) {
 
@@ -398,14 +403,14 @@ private ForceStopTimerTask mForceStopTimerTask;
                         }
                     }
 
-//                    mHandler.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            point.setText(String.valueOf(mDiagResultPoint) + "/" + String.valueOf(mDiagMaxPoint));
-//                        }
-//                    });
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mDebug.setText(String.valueOf(mAudioTrack.getPlayState()) + ":" + String.valueOf(mDiagResultPoint) + "/" + String.valueOf(mDiagMaxPoint));
+                        }
+                    });
                 }
-            }, 0, 500, TimeUnit.MILLISECONDS);
+            }, 0, 1000, TimeUnit.MILLISECONDS);
 
             mRunnnableForRandomPlay = new RunnnableForRandomPlay();
 //            new Thread(mRunnnableForRandomPlay).start();
@@ -508,6 +513,7 @@ private ForceStopTimerTask mForceStopTimerTask;
                     }
                     mRunnableForUpdateRightIcon.running = false;
                     for (CustomFontButtonWithRightIcon item : mButtonList) {
+                        item.setEnabled(true);
                         item.setRightIcon(mFaMap.get("fa-play"));
                     }
 
@@ -538,54 +544,57 @@ private ForceStopTimerTask mForceStopTimerTask;
             Collections.shuffle(waveGenList);
 
             try {
-                for (int i = 0; i < waveGenList.size(); i++) {
+                for (int j = 0; j < 2; j++) {
 
-                    // TODO ScheduledExecutor使ったほうがスマートか。
+                    for (int i = 0; i < waveGenList.size(); i++) {
 
-                    if (Thread.interrupted()) {
-                        throw new InterruptedException();
-                    }
+                        // TODO ScheduledExecutor使ったほうがスマートか。
 
-                    // 停止
-                    mAudioTrack.setStereoVolume(0, 0);
-                    mAudioTrack.stop();
+                        if (Thread.interrupted()) {
+                            throw new InterruptedException();
+                        }
 
-                    if (Thread.interrupted()) {
-                        throw new InterruptedException();
-                    }
+                        // 停止
+                        mAudioTrack.setStereoVolume(0, 0);
+                        mAudioTrack.stop();
 
-                    // 休止秒数（ミリ秒）
-                    try {
-                        int pauseTime = ((1 + random.nextInt(3)) * 1000);
-                        Thread.sleep(pauseTime);
-                    } catch (InterruptedException e) {
-                        throw new InterruptedException();
-                    }
+                        if (Thread.interrupted()) {
+                            throw new InterruptedException();
+                        }
 
-                    if (Thread.interrupted()) {
-                        throw new InterruptedException();
-                    }
+                        // 休止秒数（ミリ秒）
+                        try {
+                            int pauseTime = ((1 + random.nextInt(3)) * 1000);
+                            Thread.sleep(pauseTime);
+                        } catch (InterruptedException e) {
+                            throw new InterruptedException();
+                        }
 
-                    // 周波数を決定
-                    mCurrentWaveGenerator = waveGenList.get(i);
-                    mAudioTrack.play();
-                    writeSound();
-                    mAudioTrack.setStereoVolume(1, 1);
+                        if (Thread.interrupted()) {
+                            throw new InterruptedException();
+                        }
 
-                    if (Thread.interrupted()) {
-                        throw new InterruptedException();
-                    }
+                        // 周波数を決定
+                        mCurrentWaveGenerator = waveGenList.get(i);
+                        mAudioTrack.play();
+                        writeSound();
+                        mAudioTrack.setStereoVolume(1, 1);
 
-                    // 再生秒数（ミリ秒）
-                    try {
-                        int playTime = ((2 + random.nextInt(3)) * 1000);
-                        Thread.sleep(playTime);
-                    } catch (InterruptedException e) {
-                        throw new InterruptedException();
-                    }
+                        if (Thread.interrupted()) {
+                            throw new InterruptedException();
+                        }
 
-                    if (Thread.interrupted()) {
-                        throw new InterruptedException();
+                        // 再生秒数（ミリ秒）
+                        try {
+                            int playTime = ((2 + random.nextInt(3)) * 1000);
+                            Thread.sleep(playTime);
+                        } catch (InterruptedException e) {
+                            throw new InterruptedException();
+                        }
+
+                        if (Thread.interrupted()) {
+                            throw new InterruptedException();
+                        }
                     }
                 }
 
