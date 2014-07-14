@@ -1,5 +1,7 @@
 package jp.caliconography.miminenreichecker.app;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.media.AudioFormat;
@@ -92,6 +94,7 @@ private ForceStopTimerTask mForceStopTimerTask;
     private int mDiagMaxPoint;
 
     private TextView mDebug;
+    private TextView mLblMeasuring;
 
     public PlaceholderFragment() {
         /**
@@ -168,6 +171,7 @@ private ForceStopTimerTask mForceStopTimerTask;
                 rootView = inflater.inflate(R.layout.fragment_diagnosis, container, false);
 
                 mDebug = (TextView) rootView.findViewById(R.id.textView2);
+                mLblMeasuring = (TextView) rootView.findViewById((R.id.lbl_measuring));
 
                 mLayoutDiag = rootView.findViewById((R.id.layout_diag));
                 mLayoutDiagResult = rootView.findViewById((R.id.layout_diag_result));
@@ -276,6 +280,7 @@ private ForceStopTimerTask mForceStopTimerTask;
             mBtnStartDiag.setVisibility(View.VISIBLE);
             mBtnStopDiag.setVisibility(View.INVISIBLE);
             mBtnGotIt.setVisibility(View.INVISIBLE);
+            mLblMeasuring.setVisibility(View.INVISIBLE);
 
             mDiagResultPoint = -1;
             mDiagMaxPoint = -1;
@@ -352,10 +357,55 @@ private ForceStopTimerTask mForceStopTimerTask;
             mBtnStartDiag.setVisibility(View.INVISIBLE);
             mBtnStopDiag.setVisibility(View.VISIBLE);
             mBtnGotIt.setVisibility(View.VISIBLE);
+            mLblMeasuring.setVisibility(View.VISIBLE);
 
 
-            mScheduledExecutor = Executors.newScheduledThreadPool(2);
+            mScheduledExecutor = Executors.newScheduledThreadPool(3);
 
+            // 測定中
+            mScheduledExecutor.scheduleWithFixedDelay(new Runnable() {
+                @Override
+                public void run() {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mLblMeasuring.setVisibility(View.VISIBLE);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                                animateAlpha();
+                            }
+                        }
+                    });
+                }
+
+
+                @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+                private void animateAlpha() {
+
+                    // AnimatorSetに渡すAnimatorのリストです
+                    List<Animator> animatorList = new ArrayList<Animator>();
+
+                    // alphaプロパティを0fから1fに変化させます
+                    ObjectAnimator animeOn = ObjectAnimator.ofFloat(mLblMeasuring, "alpha", 0f, 1f);
+                    // 3秒かけて実行させます
+                    animeOn.setDuration(1000);
+
+                    // alphaプロパティを0fから1fに変化させます
+                    ObjectAnimator animeOff = ObjectAnimator.ofFloat(mLblMeasuring, "alpha", 1f, 0f);
+                    // 3秒かけて実行させます
+                    animeOff.setDuration(600);
+
+                    animatorList.add(animeOn);
+                    animatorList.add(animeOff);
+
+                    final AnimatorSet animatorSet = new AnimatorSet();
+                    // リストのAnimatorを順番に実行します
+                    animatorSet.playSequentially(animatorList);
+
+                    animatorSet.start();
+                }
+            }, 0, 1700, TimeUnit.MILLISECONDS);
+
+            // 得点カウント
             mScheduledExecutor.scheduleWithFixedDelay(new Runnable() {
                 @Override
                 public void run() {
@@ -413,6 +463,7 @@ private ForceStopTimerTask mForceStopTimerTask;
                 }
             }, 0, 500, TimeUnit.MILLISECONDS);
 
+            // ランダム再生
             mRunnnableForRandomPlay = new RunnnableForRandomPlay();
 //            new Thread(mRunnnableForRandomPlay).start();
             mScheduledFuture = mScheduledExecutor.schedule(mRunnnableForRandomPlay, 1000, TimeUnit.MILLISECONDS);

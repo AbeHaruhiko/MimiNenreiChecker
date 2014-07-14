@@ -76,6 +76,18 @@
                     android:visibility="invisible"
                     caliconography:customFont="fontawesome-webfont.ttf" />
 
+                <TextView
+                    android:id="@+id/lbl_measuring"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/btn_got_it"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal|top"
+                    android:text="測定中..."
+                    android:textColor="#aaa"
+                    android:textSize="36sp"
+                    android:visibility="gone" />
+
                 <view
                     android:id="@+id/btn_stop"
                     class="jp.caliconography.android.widget.CustomFontButton"
@@ -152,17 +164,6 @@
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal|top"
                     android:text="%1$d"
-                    android:textSize="72dp"
-                    android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/measuring"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/lbl_diag_age"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center_horizontal|top"
-                    android:text="測定中..."
                     android:textSize="72dp"
                     android:visibility="gone" />
 
