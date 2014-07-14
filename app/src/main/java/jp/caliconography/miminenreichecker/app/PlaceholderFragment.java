@@ -411,7 +411,7 @@ private ForceStopTimerTask mForceStopTimerTask;
                         }
                     });
                 }
-            }, 0, 1000, TimeUnit.MILLISECONDS);
+            }, 0, 500, TimeUnit.MILLISECONDS);
 
             mRunnnableForRandomPlay = new RunnnableForRandomPlay();
 //            new Thread(mRunnnableForRandomPlay).start();
@@ -587,7 +587,7 @@ private ForceStopTimerTask mForceStopTimerTask;
 
                         // 再生秒数（ミリ秒）
                         try {
-                            int playTime = ((2 + random.nextInt(3)) * 1000);
+                            int playTime = ((1 + random.nextInt(4)) * 1000);
                             Thread.sleep(playTime);
                         } catch (InterruptedException e) {
                             throw new InterruptedException();
@@ -603,7 +603,7 @@ private ForceStopTimerTask mForceStopTimerTask;
                 mAudioTrack.stop();
 
                 // 採点
-                float f = (float) mDiagResultPoint / mDiagMaxPoint;
+                float f = (float) mDiagResultPoint / mDiagMaxPoint / 0.5f;
                 Log.d(TAG, String.valueOf(f));
                 // 63 〜 13歳まで、0.02ごとに加算
                 final int age = Math.round(63 - f * 50);

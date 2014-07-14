@@ -177,7 +177,7 @@
                     android:background="@drawable/btn_common_back"
                     android:padding="@dimen/padding_level_button"
                     android:text="&#xf060; チャレンジモードTOPへ"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:visibility="visible"
                     caliconography:customFont="fontawesome-webfont.ttf" />
 
