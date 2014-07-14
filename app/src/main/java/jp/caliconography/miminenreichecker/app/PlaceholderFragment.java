@@ -270,7 +270,10 @@ private ForceStopTimerTask mForceStopTimerTask;
         if (getArguments().getInt(PlaceholderFragment.ARG_SECTION_NUMBER) == 1) {
 
             if (mRunnableForUpdateRightIcon != null) mRunnableForUpdateRightIcon.running = false;
-
+            for (CustomFontButtonWithRightIcon item : mButtonList) {
+                item.setEnabled(true);
+                item.setRightIcon(mFaMap.get("fa-play"));
+            }
         } else if (getArguments().getInt(PlaceholderFragment.ARG_SECTION_NUMBER) == 2) {
 
             mLayoutDiag.setVisibility(View.VISIBLE);
