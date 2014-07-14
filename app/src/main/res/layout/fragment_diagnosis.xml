@@ -156,6 +156,17 @@
                     android:visibility="gone" />
 
                 <TextView
+                    android:id="@+id/measuring"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/lbl_diag_age"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal|top"
+                    android:text="測定中..."
+                    android:textSize="72dp"
+                    android:visibility="gone" />
+
+                <TextView
                     android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

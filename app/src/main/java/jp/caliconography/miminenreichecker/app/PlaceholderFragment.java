@@ -415,7 +415,7 @@ private ForceStopTimerTask mForceStopTimerTask;
 
             mRunnnableForRandomPlay = new RunnnableForRandomPlay();
 //            new Thread(mRunnnableForRandomPlay).start();
-            mScheduledFuture = mScheduledExecutor.schedule(mRunnnableForRandomPlay, 0, TimeUnit.MILLISECONDS);
+            mScheduledFuture = mScheduledExecutor.schedule(mRunnnableForRandomPlay, 1000, TimeUnit.MILLISECONDS);
 
 //            if (mForceStopDiagTimerTask != null) mForceStopDiagTimerTask.cancel();
 //            mForceStopDiagTimerTask = new ForceStopDiagTimerTask();
