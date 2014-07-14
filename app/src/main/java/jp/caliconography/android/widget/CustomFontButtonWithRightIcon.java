@@ -1,7 +1,6 @@
 package jp.caliconography.android.widget;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -26,7 +25,7 @@ public class CustomFontButtonWithRightIcon extends LinearLayout {
         setRightIcon(context, attrs, mRightIconView);
         CustomFontTextView textView = (CustomFontTextView) v.findViewById(R.id.lblMiddle);
         setText(context, attrs, textView);
-        setTextColor(context, attrs, textView);
+//        setTextColor(context, attrs, textView);
 
         setClickable(true);
 
@@ -54,10 +53,10 @@ public class CustomFontButtonWithRightIcon extends LinearLayout {
         a.recycle();
     }
 
-    private void setTextColor(Context ctx, AttributeSet attrs, CustomFontTextView textView) {
-        TypedArray a = ctx.obtainStyledAttributes(attrs, new int[]{android.R.attr.textColor});
-        ColorStateList textColor = a.getColorStateList(0);
-        textView.setTextColor(textColor);
-        a.recycle();
-    }
+//    private void setTextColor(Context ctx, AttributeSet attrs, CustomFontTextView textView) {
+//        TypedArray a = ctx.obtainStyledAttributes(attrs, new int[]{android.R.attr.textColor});
+//        ColorStateList textColor = a.getColorStateList(0);
+//        textView.setTextColor(textColor);
+//        a.recycle();
+//    }
 }

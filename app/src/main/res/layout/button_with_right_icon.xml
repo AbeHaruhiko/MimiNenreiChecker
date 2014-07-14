@@ -14,9 +14,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
+        android:duplicateParentState="true"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@drawable/btn_text_color"
         caliconography:customFont="fontawesome-webfont.ttf" />
 
     <view
@@ -26,11 +28,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_margin="8dp"
+        android:duplicateParentState="true"
         android:gravity="left"
         android:paddingBottom="8dp"
         android:paddingLeft="8dp"
         android:paddingTop="8dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@drawable/btn_text_color"
         caliconography:customFont="fontawesome-webfont.ttf" />
 
 </LinearLayout>

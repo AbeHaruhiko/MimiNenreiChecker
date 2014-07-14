@@ -70,7 +70,6 @@
                 android:background="@drawable/btn_common_back"
                 android:padding="@dimen/padding_level_button"
                 android:text="Lv.1 40代以上"
-                android:textColor="@drawable/btn_text_color"
                 android:textSize="20sp"
                 caliconography:icon_right="&#xf04b;" />
 
@@ -85,7 +84,6 @@
                 android:background="@drawable/btn_common_back"
                 android:padding="@dimen/padding_level_button"
                 android:text="Lv.2 30代"
-                android:textColor="@drawable/btn_text_color"
                 android:textSize="24sp"
                 caliconography:icon_right="&#xf04b;" />
 
@@ -100,7 +98,6 @@
                 android:background="@drawable/btn_common_back"
                 android:padding="@dimen/padding_level_button"
                 android:text="Lv.3 20代後半"
-                android:textColor="@drawable/btn_text_color"
                 android:textSize="24sp"
                 caliconography:icon_right="&#xf04b;" />
 
@@ -115,7 +112,6 @@
                 android:background="@drawable/btn_common_back"
                 android:padding="@dimen/padding_level_button"
                 android:text="Lv.4 18歳〜20代前半"
-                android:textColor="@drawable/btn_text_color"
                 android:textSize="24sp"
                 caliconography:icon_right="&#xf04b;" />
 
@@ -130,7 +126,6 @@
                 android:background="@drawable/btn_common_back"
                 android:padding="@dimen/padding_level_button"
                 android:text="Lv.5 13歳〜17歳"
-                android:textColor="@drawable/btn_text_color"
                 android:textSize="24sp"
                 caliconography:icon_right="&#xf04b;" />
 
@@ -146,7 +141,6 @@
                 android:background="@drawable/btn_common_back"
                 android:padding="@dimen/padding_level_button"
                 android:text="Lv.6 犬並"
-                android:textColor="@drawable/btn_text_color"
                 android:textSize="24sp"
                 caliconography:icon_right="&#xf04b;" />
 

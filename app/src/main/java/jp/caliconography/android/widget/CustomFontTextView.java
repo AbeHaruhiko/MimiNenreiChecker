@@ -46,5 +46,4 @@ public class CustomFontTextView extends TextView {
         setTypeface(tf);
         return true;
     }
-
 }
