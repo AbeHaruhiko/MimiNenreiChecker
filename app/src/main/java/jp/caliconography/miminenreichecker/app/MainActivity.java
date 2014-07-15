@@ -1,5 +1,6 @@
 package jp.caliconography.miminenreichecker.app;
 
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -74,6 +75,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                             .setTabListener(this)
             );
         }
+
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }
 
     @Override
