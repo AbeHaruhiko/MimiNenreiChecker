@@ -388,17 +388,17 @@ private ForceStopTimerTask mForceStopTimerTask;
                     List<Animator> animatorList = new ArrayList<Animator>();
 
                     // alphaプロパティを0fから1fに変化させます
-                    ObjectAnimator animeOn = ObjectAnimator.ofFloat(mLblMeasuring, "alpha", 0f, 1f);
+                    ObjectAnimator animeFadeIn = ObjectAnimator.ofFloat(mLblMeasuring, "alpha", 0f, 1f);
                     // 3秒かけて実行させます
-                    animeOn.setDuration(1000);
+                    animeFadeIn.setDuration(1000);
 
                     // alphaプロパティを0fから1fに変化させます
-                    ObjectAnimator animeOff = ObjectAnimator.ofFloat(mLblMeasuring, "alpha", 1f, 0f);
+                    ObjectAnimator animeFadeOut = ObjectAnimator.ofFloat(mLblMeasuring, "alpha", 1f, 0f);
                     // 3秒かけて実行させます
-                    animeOff.setDuration(600);
+                    animeFadeOut.setDuration(600);
 
-                    animatorList.add(animeOn);
-                    animatorList.add(animeOff);
+                    animatorList.add(animeFadeIn);
+                    animatorList.add(animeFadeOut);
 
                     final AnimatorSet animatorSet = new AnimatorSet();
                     // リストのAnimatorを順番に実行します
