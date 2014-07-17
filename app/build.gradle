@@ -9,8 +9,8 @@ android {
         applicationId "jp.caliconography.android.miminenreichecker"
         minSdkVersion 9
         targetSdkVersion 20
-        versionCode 2
-        versionName "1.1"
+        versionCode 3
+        versionName "1.2"
         testInstrumentationRunner "com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
     }
     buildTypes {
@@ -34,8 +34,10 @@ android {
     }
     packagingOptions {
         // for AndroidStudio's bug. duplication error of file below.
-        pickFirst 'META-INF/LICENSE.txt'
-        pickFirst 'LICENSE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'LICENSE.txt'
     }
 }
 
@@ -56,11 +58,11 @@ dependencies {
     //  参考: "http://y-anz-m.blogspot.jp/2013/11/android-ui-testing-framework-espresso.html"
     // mockitoを使わないなら、standalone版のespresso-1.1-bundled.jarだけ下記libsに入れればOK。
     espressoTestCompile fileTree(dir: 'src/espressoTest/libs', include: '*.jar');
-    espressoTestCompile 'com.google.guava:guava:14.0.1',
+    espressoTestCompile('com.google.guava:guava:14.0.1',
             'com.squareup.dagger:dagger:1.1.0',
             'org.hamcrest:hamcrest-core:1.1',
             'org.hamcrest:hamcrest-integration:1.1',
-            'org.hamcrest:hamcrest-library:1.1'
+            'org.hamcrest:hamcrest-library:1.1')
 
     // JUnit4, mockito 関連jar
     junit4TestCompile("org.mockito:mockito-core:1.9.5")
@@ -69,9 +71,29 @@ dependencies {
     junit4TestCompile("com.uphyca:android-junit4:+")
 
     // Robolectric
-    androidTestCompile 'junit:junit:4.10'
-    androidTestCompile 'org.robolectric:robolectric:2.3+'
-    androidTestCompile 'com.squareup:fest-android:1.0.+'
+//    androidTestCompile ('junit:junit:4.10')  {
+//        exclude module: "hamcrest-core"
+//    }
+//    androidTestCompile ('org.robolectric:robolectric:2.3+') {
+//        exclude module: "classworlds"
+//        exclude module: "maven-artifact"
+//        exclude module: "maven-artifact-manager"
+//        exclude module: "maven-error-diagnostics"
+//        exclude module: "maven-model"
+//        exclude module: "maven-plugin-registry"
+//        exclude module: "maven-profile"
+//        exclude module: "maven-project"
+//        exclude module: "maven-settings"
+//        exclude module: "nekohtml"
+//        exclude module: "plexus-container-default"
+//        exclude module: "plexus-interpolation"
+//        exclude module: "plexus-utils"
+//        exclude module: "wagon-file"
+//        exclude module: "wagon-http-lightweight"
+//        exclude module: "wagon-http-shared"
+//        exclude module: "wagon-provider-api"
+//    }
+//    androidTestCompile 'com.squareup:fest-android:1.0.+'
 }
 
 robolectric {
