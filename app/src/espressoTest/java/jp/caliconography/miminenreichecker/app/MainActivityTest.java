@@ -1,18 +1,13 @@
 package jp.caliconography.miminenreichecker.app;
 
 import android.app.Activity;
-import android.support.v4.view.ViewPager;
 import android.test.ActivityInstrumentationTestCase2;
 
-import com.google.android.apps.common.testing.ui.espresso.IdlingPolicies;
 import com.google.android.apps.common.testing.ui.espresso.contrib.CountingIdlingResource;
-
-import java.util.concurrent.TimeUnit;
 
 import jp.caliconography.android.miminenreichecker.R;
 
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
-import static com.google.android.apps.common.testing.ui.espresso.Espresso.registerIdlingResources;
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.click;
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.scrollTo;
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.swipeLeft;
@@ -370,6 +365,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     }
 
+/*
     public void testチャレンジモードでstartボタン押下から診断終了までの画面表示() {
 
         onView(withId(R.id.pager))
@@ -408,6 +404,113 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         onView(withId(R.id.lbl_measuring))
                 .check(matches(not(isDisplayed())));
 
+
+    }
+*/
+
+    public void testかんたんチェックで再生後スワイプで戻ってくると再生停止している() {
+
+        onView(withId(R.id.btn_lv1))
+                .perform(click());
+
+        onView(withId(R.id.pager))
+                .perform(swipeLeft());
+
+        onView(withId(R.id.pager))
+                .perform(swipeRight());
+
+        onView(withId(R.id.btn_lv1))
+                .check(matches(isEnabled()));
+
+        onView(withId(R.id.btn_lv2))
+                .check(matches(isEnabled()));
+
+        onView(withId(R.id.btn_lv3))
+                .check(matches(isEnabled()));
+
+        onView(withId(R.id.btn_lv4))
+                .check(matches(isEnabled()));
+
+        onView(withId(R.id.btn_lv5))
+                .check(matches(isEnabled()));
+
+        onView(withId(R.id.btn_lv6))
+                .check(matches(isEnabled()));
+
+        // 右アイコンがfa-playである
+        onView(
+                allOf(
+                        withId(R.id.lblRight)
+                        , hasSibling(withText(R.string.lbl_lv1))
+                )
+        )
+                .check(matches(withText(R.string.fa_play)));
+
+        onView(
+                allOf(
+                        withId(R.id.lblRight)
+                        , hasSibling(withText(R.string.lbl_lv2))
+                )
+        )
+                .check(matches(withText(R.string.fa_play)));
+
+        onView(
+                allOf(
+                        withId(R.id.lblRight)
+                        , hasSibling(withText(R.string.lbl_lv3))
+                )
+        )
+                .check(matches(withText(R.string.fa_play)));
+
+        onView(
+                allOf(
+                        withId(R.id.lblRight)
+                        , hasSibling(withText(R.string.lbl_lv4))
+                )
+        )
+                .check(matches(withText(R.string.fa_play)));
+
+        onView(
+                allOf(
+                        withId(R.id.lblRight)
+                        , hasSibling(withText(R.string.lbl_lv5))
+                )
+        )
+                .check(matches(withText(R.string.fa_play)));
+
+        onView(
+                allOf(
+                        withId(R.id.lblRight)
+                        , hasSibling(withText(R.string.lbl_lv6))
+                )
+        )
+                .check(matches(withText(R.string.fa_play)));
+
+    }
+
+    public void testチャレンジモードスタート後スワイプで戻ってくると再生停止している() {
+
+        onView(withId(R.id.pager))
+                .perform(swipeLeft());
+
+        onView(withId(R.id.btn_start_diag))
+                .perform(click());
+
+        onView(withId(R.id.pager))
+                .perform(swipeRight());
+
+        onView(withId(R.id.pager))
+                .perform(swipeLeft());
+
+        // 初期表示
+        onView(withId(R.id.btn_start_diag))
+                .check(matches(isDisplayed()));
+
+        onView(withId(R.id.btn_stop))
+                .check(matches(not(isDisplayed())));
+
+        onView(withId(R.id.lbl_measuring))
+                .check(matches(not(isDisplayed())));
 
     }
 
