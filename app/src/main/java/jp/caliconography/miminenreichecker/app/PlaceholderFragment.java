@@ -250,7 +250,7 @@ private ForceStopTimerTask mForceStopTimerTask;
 
         // 広告
         LinearLayout ad_container = (LinearLayout) rootView.findViewById(R.id.ad_container);
-        mAdg = new ADG(this.getActivity().getApplicationContext());
+        mAdg = new ADG(this.getActivity());
         mAdg.setLocationId("14996");
         mAdg.setAdFrameSize(ADG.AdFrameSize.SP);
         mAdg.setAdListener(new AdListener());
