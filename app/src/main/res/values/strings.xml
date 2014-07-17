@@ -9,5 +9,12 @@
     <string name="diag_description">約30秒間ランダムにいろいろなレベルの音が再生されます。\n\n音が聴こえている間「聴こえた！」ボタンを押しっぱなしにして、音が止まったら離しましょう！\n\n実際の音とボタンを押しているタイミングが一致しているほど、耳年齢が若く判定されます。\n\n\nでは「スタート」ボタンで診断を開始しましょう！</string>
     <string name="diag_age">%1$d</string>
     <string name="diag_info">音量の上げすぎに注意しましょう。\n安全のため再生開始から約10秒後に自動的に停止します。</string>
+    <string name="lbl_lv1">Lv.1 40代以上</string>
+    <string name="lbl_lv2">Lv.2 30代</string>
+    <string name="lbl_lv3">Lv.3 20代後半</string>
+    <string name="lbl_lv4">Lv.4 18歳〜20代前半</string>
+    <string name="lbl_lv5">Lv.5 13歳〜17歳</string>
+    <string name="lbl_lv6">Lv.6 犬並</string>
+    <string name="fa_play">&#xf04b;</string>
 
 </resources>
