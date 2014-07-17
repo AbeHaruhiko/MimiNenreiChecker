@@ -260,8 +260,11 @@ private ForceStopTimerTask mForceStopTimerTask;
     }
 
     void clearFragment() {
-        mAudioTrack.setStereoVolume(0, 0);
-        mAudioTrack.stop();
+
+        if (mAudioTrack.getState() != AudioTrack.STATE_UNINITIALIZED) {
+            mAudioTrack.setStereoVolume(0, 0);
+            mAudioTrack.stop();
+        }
 
         if (mScheduledFuture != null) mScheduledFuture.cancel(true);
         if (mScheduledExecutor != null) mScheduledExecutor.shutdown();
