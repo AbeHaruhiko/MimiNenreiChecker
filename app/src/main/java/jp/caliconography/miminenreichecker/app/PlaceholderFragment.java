@@ -95,6 +95,7 @@ private ForceStopTimerTask mForceStopTimerTask;
 
     private TextView mDebug;
     private TextView mLblMeasuring;
+    private DiagStateListener mDiagStateListener;
 
     public PlaceholderFragment() {
         /**
@@ -112,6 +113,14 @@ private ForceStopTimerTask mForceStopTimerTask;
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public DiagStateListener getmDiagStateListener() {
+        return mDiagStateListener;
+    }
+
+    public void setmDiagStateListener(DiagStateListener mDiagStateListener) {
+        this.mDiagStateListener = mDiagStateListener;
     }
 
     @Override
@@ -356,6 +365,8 @@ private ForceStopTimerTask mForceStopTimerTask;
 
         if (mAudioTrack != null) {
 
+            if (mDiagStateListener != null) mDiagStateListener.onDiagStateChanged(true);
+
             mDiagResultPoint = 0;
             mDiagMaxPoint = 0;
 
@@ -512,6 +523,11 @@ private ForceStopTimerTask mForceStopTimerTask;
             mSoundBuffer[i] = (short) (Short.MAX_VALUE * mCurrentWaveGenerator.generateSinWave());
         }
         mAudioTrack.write(mSoundBuffer, 0, mSoundBuffer.length);
+    }
+
+    // for Espresso
+    public interface DiagStateListener {
+        public void onDiagStateChanged(boolean running);
     }
 
     class RunnnableForUpdateRightIcon implements Runnable {
@@ -692,6 +708,8 @@ private ForceStopTimerTask mForceStopTimerTask;
                         objectAnimator.start();
                     }
                 });
+
+                if (mDiagStateListener != null) mDiagStateListener.onDiagStateChanged(false);
 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
