@@ -4,9 +4,11 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +23,7 @@ import android.widget.TextView;
 import com.beardedhen.androidbootstrap.FontAwesome;
 import com.socdm.d.adgeneration.ADG;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,6 +39,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import jp.caliconography.android.miminenreichecker.R;
+import jp.caliconography.android.util.Util;
 import jp.caliconography.android.widget.CustomFontButton;
 import jp.caliconography.android.widget.CustomFontButtonWithRightIcon;
 
@@ -55,6 +59,7 @@ public class PlaceholderFragment extends Fragment {
      */
     static final String ARG_SECTION_NUMBER = "section_number";
     private final static String TAG = PlaceholderFragment.class.getSimpleName();
+    public static final String TWEET = "わたしの耳年齢は%s才です。 #耳年齢チェック https://play.google.com/store/apps/details?id=jp.caliconography.android.miminenreichecker";
     ADG mAdg;
     private AudioTrack mAudioTrack;
     private View mLayoutDiag;
@@ -90,12 +95,15 @@ private ForceStopTimerTask mForceStopTimerTask;
     private CustomFontButton mBtnStopDiag;
     private CustomFontButton mBtnGotIt;
     private CustomFontButton mBtnBackToDiagTop;
+    private CustomFontButton mBtnShare;
     private int mDiagResultPoint;
     private int mDiagMaxPoint;
 
-    private TextView mDebug;
+//    private TextView mDebug;
     private TextView mLblMeasuring;
     private DiagStateListener mDiagStateListener;
+    private LinearLayout mAdContainer;
+    private TextView mLbl1Minute;
 
     public PlaceholderFragment() {
         /**
@@ -179,8 +187,9 @@ private ForceStopTimerTask mForceStopTimerTask;
             case 2:
                 rootView = inflater.inflate(R.layout.fragment_diagnosis, container, false);
 
-                mDebug = (TextView) rootView.findViewById(R.id.textView2);
+//                mDebug = (TextView) rootView.findViewById(R.id.textView2);
                 mLblMeasuring = (TextView) rootView.findViewById((R.id.lbl_measuring));
+                mLbl1Minute = (TextView) rootView.findViewById((R.id.lbl_1minute));
 
                 mLayoutDiag = rootView.findViewById((R.id.layout_diag));
                 mLayoutDiagResult = rootView.findViewById((R.id.layout_diag_result));
@@ -190,6 +199,7 @@ private ForceStopTimerTask mForceStopTimerTask;
                 mBtnStopDiag = (CustomFontButton) rootView.findViewById(R.id.btn_stop);
                 mBtnGotIt = (CustomFontButton) rootView.findViewById(R.id.btn_got_it);
                 mBtnBackToDiagTop = (CustomFontButton) rootView.findViewById(R.id.btn_back_to_diag_top);
+                mBtnShare = (CustomFontButton) rootView.findViewById(R.id.btn_share);
 
                 mLblAge = (TextView) rootView.findViewById(R.id.lbl_diag_age);
 
@@ -212,6 +222,13 @@ private ForceStopTimerTask mForceStopTimerTask;
                     @Override
                     public void onClick(View view) {
                         mBtnStopDiag.performClick();
+                    }
+                });
+
+                mBtnShare.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        share();
                     }
                 });
 
@@ -258,14 +275,40 @@ private ForceStopTimerTask mForceStopTimerTask;
         );
 
         // 広告
-        LinearLayout ad_container = (LinearLayout) rootView.findViewById(R.id.ad_container);
+        mAdContainer = (LinearLayout) rootView.findViewById(R.id.ad_container);
         mAdg = new ADG(this.getActivity());
         mAdg.setLocationId("14996");
         mAdg.setAdFrameSize(ADG.AdFrameSize.SP);
         mAdg.setAdListener(new AdListener());
-        ad_container.addView(mAdg);
+        mAdContainer.addView(mAdg);
 
         return rootView;
+    }
+
+    private void share() {
+//        String url = "http://twitter.com/share?text=hogehoge";
+//        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+//        startActivity(intent);
+
+        // スクショ取得のため広告を隠す
+        mAdContainer.setVisibility(View.INVISIBLE);
+
+        // スクショ取得
+        File screenShotFile = Util.getScreenShotFile(getActivity().findViewById(R.id.pager), getActivity().getApplicationContext());
+
+        // 広告再表示
+        mAdContainer.setVisibility(View.VISIBLE);
+
+        //Intent.ACTION_SENDを発行
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        // 画像も送りたいので「image/jpeg」を指定
+        intent.setType("image/png");
+        // ツイート文言の設定
+        intent.putExtra(Intent.EXTRA_TEXT, String.format(TWEET, mLblAge.getText()));
+        // 画像の設定(content://でファイルを指定する)
+        intent.putExtra(Intent.EXTRA_STREAM, Util.getImageContentUri(getActivity().getApplicationContext(), screenShotFile));
+        // 呼び出し 10はリクエストID(アプリ内でわかりやすいものを指定すればよい)
+        startActivity(intent);
     }
 
     void clearFragment() {
@@ -296,6 +339,7 @@ private ForceStopTimerTask mForceStopTimerTask;
             mBtnStopDiag.setVisibility(View.INVISIBLE);
             mBtnGotIt.setVisibility(View.INVISIBLE);
             mLblMeasuring.setVisibility(View.INVISIBLE);
+            mLbl1Minute.setVisibility(View.INVISIBLE);
 
             mDiagResultPoint = -1;
             mDiagMaxPoint = -1;
@@ -375,6 +419,7 @@ private ForceStopTimerTask mForceStopTimerTask;
             mBtnStopDiag.setVisibility(View.VISIBLE);
             mBtnGotIt.setVisibility(View.VISIBLE);
             mLblMeasuring.setVisibility(View.VISIBLE);
+            mLbl1Minute.setVisibility(View.VISIBLE);
 
 
             mScheduledExecutor = Executors.newScheduledThreadPool(3);
@@ -471,12 +516,12 @@ private ForceStopTimerTask mForceStopTimerTask;
                         }
                     }
 
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mDebug.setText(String.valueOf(mAudioTrack.getPlayState()) + ":" + String.valueOf(mDiagResultPoint) + "/" + String.valueOf(mDiagMaxPoint));
-                        }
-                    });
+//                    mHandler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            mDebug.setText(String.valueOf(mAudioTrack.getPlayState()) + ":" + String.valueOf(mDiagResultPoint) + "/" + String.valueOf(mDiagMaxPoint));
+//                        }
+//                    });
                 }
             }, 0, 500, TimeUnit.MILLISECONDS);
 

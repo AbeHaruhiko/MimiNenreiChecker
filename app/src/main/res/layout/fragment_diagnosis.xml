@@ -104,11 +104,12 @@
                     caliconography:customFont="fontawesome-webfont.ttf" />
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/lbl_1minute"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:text="Small Text"
+                    android:layout_below="@+id/lbl_measuring"
+                    android:text="測定時間は1分前後です。"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:visibility="gone" />
 
@@ -179,19 +180,37 @@
                     android:visibility="gone" />
 
                 <view
-                    android:id="@+id/btn_back_to_diag_top"
+                    android:id="@+id/btn_share"
                     class="jp.caliconography.android.widget.CustomFontButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/lbl_diag_age"
-                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="80dp"
+                    android:background="@drawable/btn_common_back"
+                    android:padding="@dimen/padding_level_button"
+                    android:text="&#xf1e0; 結果をシェア！"
+                    android:textSize="20sp"
+                    android:visibility="visible"
+                    caliconography:customFont="fontawesome-webfont.ttf"
+                    android:layout_alignRight="@+id/btn_back_to_diag_top"
+                    android:layout_alignEnd="@+id/btn_back_to_diag_top"
+                    android:layout_alignLeft="@+id/btn_back_to_diag_top"
+                    android:layout_alignStart="@+id/btn_back_to_diag_top" />
+
+                <view
+                    android:id="@+id/btn_back_to_diag_top"
+                    class="jp.caliconography.android.widget.CustomFontButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/btn_share"
+                    android:layout_centerHorizontal="true"
                     android:background="@drawable/btn_common_back"
                     android:padding="@dimen/padding_level_button"
                     android:text="&#xf060; チャレンジモードTOPへ"
                     android:textSize="20sp"
                     android:visibility="visible"
-                    caliconography:customFont="fontawesome-webfont.ttf" />
+                    caliconography:customFont="fontawesome-webfont.ttf"
+                    android:layout_marginTop="@dimen/padding_level_button" />
 
             </RelativeLayout>
 
