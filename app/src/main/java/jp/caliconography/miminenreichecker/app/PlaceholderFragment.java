@@ -99,7 +99,7 @@ private ForceStopTimerTask mForceStopTimerTask;
     private int mDiagResultPoint;
     private int mDiagMaxPoint;
 
-//    private TextView mDebug;
+    private TextView mDebug;
     private TextView mLblMeasuring;
     private DiagStateListener mDiagStateListener;
     private LinearLayout mAdContainer;
@@ -516,12 +516,12 @@ private ForceStopTimerTask mForceStopTimerTask;
                         }
                     }
 
-//                    mHandler.post(new Runnable() {
-//                        @Override
-//                        public void run() {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
 //                            mDebug.setText(String.valueOf(mAudioTrack.getPlayState()) + ":" + String.valueOf(mDiagResultPoint) + "/" + String.valueOf(mDiagMaxPoint));
-//                        }
-//                    });
+                        }
+                    });
                 }
             }, 0, 500, TimeUnit.MILLISECONDS);
 
