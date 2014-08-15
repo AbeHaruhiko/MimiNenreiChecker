@@ -59,7 +59,7 @@ public class PlaceholderFragment extends Fragment {
      */
     static final String ARG_SECTION_NUMBER = "section_number";
     private final static String TAG = PlaceholderFragment.class.getSimpleName();
-    public static final String TWEET = "わたしの耳年齢は%s才です。 #耳年齢チェック https://play.google.com/store/apps/details?id=jp.caliconography.android.miminenreichecker";
+    public static final String TWEET = "わたしの耳年齢は%s才です！ #耳年齢チェック https://play.google.com/store/apps/details?id=jp.caliconography.android.miminenreichecker";
     ADG mAdg;
     private AudioTrack mAudioTrack;
     private View mLayoutDiag;

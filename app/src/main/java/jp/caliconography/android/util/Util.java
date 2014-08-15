@@ -31,12 +31,16 @@ public class Util {
             return null;
         }
 //        Bitmap bitmap = Bitmap.createBitmap(cache);
-        Bitmap bitmap = scaleDownBitmap(cache, 160, context);
+        Bitmap bitmap = scaleDownBitmap(cache, 300, context);
         view.setDrawingCacheEnabled(false);
         return bitmap;
     }
 
     private static Bitmap scaleDownBitmap(Bitmap bitmap, int newHeight, Context context) {
+
+        if (newHeight >= bitmap.getHeight()) {
+            return bitmap;
+        }
 
         final float densityMultiplier = context.getResources().getDisplayMetrics().density;
 
