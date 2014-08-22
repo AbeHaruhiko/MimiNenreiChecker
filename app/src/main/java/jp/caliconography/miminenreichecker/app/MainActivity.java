@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import java.util.Locale;
 
 import jp.caliconography.android.miminenreichecker.R;
+import jp.live_aid.aid.AdController;
 
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
@@ -35,6 +36,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
      * The {@link android.support.v4.view.ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
+
+    // AID広告
+    AdController mAidAdController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +81,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+        // AID広告初期化
+        if (mAidAdController == null) {
+            // 1. AdController を生成。
+            mAidAdController = new AdController("jp.caliconograph", this);
+        }
     }
 
     @Override
@@ -120,6 +130,23 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             mViewPager = (ViewPager) findViewById(R.id.pager);
         }
         return mViewPager;
+    }
+
+    @Override public void onResume() {
+        super.onResume();
+        // アプリがアクティブになったら、広告を先読み込みします
+        mAidAdController.startPreloading();
+    }
+
+    @Override public void onPause() {
+        // Activity がバックグラウンドに行ったら、不要な広告用の通信を止めます
+        mAidAdController.stopPreloading();
+        super.onPause();
+    }
+
+    // 端末のバックボタンが押されたとき呼び出されます
+    @Override public void onBackPressed() {
+        mAidAdController.showDialog(AdController.DialogType.ON_EXIT);// 4.[終了時] 広告を表示します
     }
 
     /**
